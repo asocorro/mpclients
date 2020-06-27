@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+  <class name="SearchQuery" table="SearchQuery" >
+    <id name="ID" type="System.Int32" column="ID">
+      <generator class="assigned"/>
+    </id>
+    <property name="QueryText" column="QueryText" type="System.String" not-null="true" />
+    <property name="QueryDateTime" column="QueryDateTime" type="System.DateTime" not-null="true" />
+    <property name="UserId" column="UserId" type="System.Guid" not-null="true" />
+    <property name="ResultsCount" column="ResultsCount" type="System.Int32" not-null="true" />
+  </class>
+</hibernate-mapping>

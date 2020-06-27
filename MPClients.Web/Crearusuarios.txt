@@ -1,0 +1,50 @@
+
+
+DELETE FROM dbo.aspnet_Membership
+DELETE FROM dbo.aspnet_UsersInRoles
+DELETE FROM dbo.aspnet_Profile
+DELETE FROM dbo.aspnet_PersonalizationPerUser
+DELETE FROM aspnet_Users
+
+
+            SqlConnection sqlConn = new SqlConnection("Server=209.132.227.9; Database=mascaroporter; User ID=mascaro; pwd=porter");
+            sqlConn.Open();
+            using (SqlCommand command =
+                new SqlCommand("select u.*, Name from  dbo.[User] U left join client  C on C.client_id = u.client_id", sqlConn))
+            {
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        string Client_ID = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                        string User_name = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                        string Password = reader.IsDBNull(3) ? "" : reader.GetString(3);
+                        string LastDateSelectedPrice = reader.IsDBNull(7) ? "" : reader.GetValue(7).ToString();
+                        int CountSelectedPrice = reader.IsDBNull(8) ? 0 : reader.GetInt32(8);
+                        bool AdvancedSearch = reader.IsDBNull(9) ? false : reader.GetBoolean(9);
+                        string ClientName = reader.IsDBNull(10) ? "" : reader.GetString(10);
+
+                        MembershipCreateStatus status;
+                        Membership.CreateUser(User_name, Password + "Ch@ngeit1", "xxx@mpclients.com", "test", "test", true, out status);
+
+                        System.Web.Profile.ProfileBase profile = WebProfile.Create(User_name);
+                        profile.SetPropertyValue("ClientID", ClientID);
+                        profile.SetPropertyValue("ClientName", ClientName);
+                        profile.SetPropertyValue("AdvancedSearch", AdvancedSearch);
+                        profile.SetPropertyValue("LastPriceQueryDate", LastDateSelectedPrice);
+                        profile.SetPropertyValue("PriceQuerys", CountSelectedPrice);
+
+                        profile.Save();
+                    }
+                    catch
+                    {
+
+                    }
+
+                }
+
+                reader.Close();
+            }
+            sqlConn.Close();
+

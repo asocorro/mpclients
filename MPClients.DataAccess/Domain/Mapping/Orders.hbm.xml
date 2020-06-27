@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+	<class name="Orders" table="Orders" >
+		<id name="ID" type="System.Guid" column="OrderId">
+			<generator class="assigned"/>
+		</id>
+		<property name="UserId" column="UserId" type="System.Guid" not-null="true" />
+		<property name="OrderNo" column="OrderNo" type="System.String" not-null="false" length="20"/>
+		<property name="ConfirmationNumber" column="ConfirmationNumber" type="System.String" not-null="false" length="20"/>
+		<property name="PONumber" column="PONumber" type="System.String" not-null="false" length="20"/>
+		<property name="ContactPerson" column="ContactPerson" type="System.String" not-null="false" length="50"/>
+		<property name="Delivery" column="Delivery" type="System.Boolean" not-null="false" />
+		<property name="OrderDate" column="OrderDate" type="System.DateTime" not-null="true" />
+		<property name="Note" column="Note" type="System.String" not-null="false" length="500"/>
+		<property name="Status" column="Status" type="System.Int32" not-null="false" />
+		<property name="StatusDate" column="StatusDate" type="System.DateTime" not-null="false" />
+		<property name="AutoNum" column="AutoNum" type="System.Int32" update="false" insert="false"/>
+
+    <property name="OnBehalfOf" column="OnBehalfOf" type="System.String"/>
+		<many-to-one name="StatusOfOrder" column="Status" class="OrderStatus"  update="0"  insert="0" />
+    <many-to-one name="UserIdLookup" column="UserId" class="MembershipUsers"  update="0"  insert="0" />
+		<bag name="OrderDetails" table="OrderDetails" inverse="true" lazy="true" cascade="delete">
+			<key column="OrderID" />
+			<one-to-many class="OrderDetail"/>
+		</bag>
+	</class>
+
+  <sql-query name="LoadOrdersByClients">
+    <return alias="Orders" class="MPClients.DataAccess.Domain.Orders, MPClients.DataAccess"/>
+    SELECT  OrderNo as OrderNo
+    FROM    Orders LEFT JOIN
+    MembershipUsers ON Orders.UserId = MembershipUsers.UserID
+    WHERE MembershipUsers.ClientID = ':ClientId'
+  </sql-query>
+</hibernate-mapping>

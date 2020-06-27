@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+	<class name="MembershipUsers" table="MembershipUsers" >
+		<id name="ID" type="System.Guid" column="UserID">
+			<generator class="guid"/>
+		</id>
+		<property name="Email" column="Email" type="System.String"  length="50"/>
+		<property name="UserName" column="UserName" type="System.String"  length="50"/>
+		<property name="ClientID" column="ClientID" type="System.String"  length="50"/>
+		<property name="LastPriceQueryDate" column="LastPriceQueryDate" type="System.DateTime" not-null="true" />
+		<property name="PriceQuerys" column="PriceQuerys" type="System.Int32" not-null="true" />
+		<property name="ChangePassword" column="ChangePassword" type="System.Boolean"  />
+		<property name="LastActivityDate" column="LastActivityDate" type="System.DateTime" not-null="true" />
+		<property name="ClientName" column="ClientName" type="System.String"  />
+		<property name="IsActive" update="0" column="IsActive" type="System.Boolean"  insert="0" />
+    <property name="Territory" column="Territory" type="System.String"  length="150"/>
+    <property name="CurrentClientID" column="CurrentClientID" type="System.String" />
+    <property name="CurrentClientName" column="CurrentClientName" type="System.String" />
+    <property name="ShoppingCartId" column="ShoppingCartId" type="System.Guid" />
+    <property name="IsLockedOut" column="IsLockedOut" type="System.Boolean" update="0" insert="0"  />
+    
+  </class>
+  <class name="UserCategory" table="UserCategory" >
+    <id name="ID" type="System.Guid" column="ID">
+      <generator class="guid"/>
+    </id>
+    <property name="UserId" column="UserId" type="System.Guid" />
+    <property name="Category" column="Category" type="System.String"  length="50"/>
+  </class>
+</hibernate-mapping>

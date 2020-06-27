@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<updateinfo>
+  <downloadmodule plat="WCE" arch="x86" name="MPSYNC" action="cab">
+    <version maj="1" min="0" bld="2794"/>
+    download/MPSync.1.0.2794.CAB
+  </downloadmodule>
+  <downloadmodule plat="WCE" arch="X86" name="MPMOBILE" action="cab">
+    <version maj="1" min="0" bld="2794"/>
+    download/MPMobile.1.0.2794.CAB
+  </downloadmodule>
+</updateinfo>

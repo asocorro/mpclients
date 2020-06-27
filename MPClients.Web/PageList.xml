@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<Pages generator="MetaSapiens.PageMethods.Addin.PageListWriter version 1.7.2.0">
+  <Settings baseNamespace="MyPageMethods" baseUrl="" />
+  <Page url="/Default.aspx">
+    <Files>
+      <File name="Default.aspx" changeDate="2007-06-25 20:46:40Z" />
+      <File name="Default.aspx.cs" changeDate="2007-06-25 21:15:03Z" />
+      <File name="Default.aspx.designer.cs" changeDate="2007-06-25 20:46:40Z" />
+    </Files>
+  </Page>
+  <Page url="/User.aspx">
+    <Files>
+      <File name="User.aspx" changeDate="2006-02-01 23:34:59Z" />
+      <File name="User.aspx.cs" changeDate="2007-06-25 16:16:22Z" />
+      <File name="User.aspx.designer.cs" changeDate="2006-01-23 18:26:37Z" />
+    </Files>
+    <Methods>
+      <Method name="DoLoad">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="user" type="System.String" />
+        </Parameters>
+      </Method>
+
+    </Methods>
+  </Page>
+  <Page url="/ProductsSearch.aspx">
+    <Files>
+      <File name="ProductsSearch.aspx" changeDate="2006-02-01 23:34:59Z" />
+      <File name="ProductsSearch.aspx.cs" changeDate="2007-06-25 16:16:22Z" />
+      <File name="ProductsSearch.aspx.designer.cs" changeDate="2006-01-23 18:26:37Z" />
+    </Files>
+    <Methods>
+      <Method name="DoLoad">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="user" type="System.String" />
+        </Parameters>
+      </Method>
+
+    </Methods>
+  </Page>
+
+
+  <Page url="/Message.aspx">
+    <Files>
+      <File name="Message.aspx" changeDate="2006-02-01 23:34:59Z" />
+      <File name="Message.aspx.cs" changeDate="2007-06-25 16:16:22Z" />
+      <File name="Message.aspx.designer.cs" changeDate="2006-01-23 18:26:37Z" />
+    </Files>
+    <Methods>
+      <Method name="LoadById">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="messageId" type="System.Int32" />
+        </Parameters>
+      </Method>
+      <Method name="MsgLoad">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="message" type="System.String" />
+        </Parameters>
+      </Method>
+
+    </Methods>
+  </Page>
+
+  <Page url="/OrderEdit.aspx">
+    <Files>
+      <File name="OrderEdit.aspx" changeDate="2006-02-01 23:34:59Z" />
+      <File name="OrderEdit.aspx.cs" changeDate="2007-06-25 16:16:22Z" />
+      <File name="OrderEdit.aspx.designer.cs" changeDate="2006-01-23 18:26:37Z" />
+    </Files>
+    <Methods>
+      <Method name="DoLoad">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="id" type="System.String" />
+          <Parameter name="fromsc" type="System.Boolean" />
+        </Parameters>
+      </Method>
+
+    </Methods>
+  </Page>
+
+
+  <Page url="/OrderConfirmation.aspx">
+    <Files>
+      <File name="OrderConfirmation.aspx" changeDate="2006-02-01 23:34:59Z" />
+      <File name="OrderConfirmation.aspx.cs" changeDate="2007-06-25 16:16:22Z" />
+      <File name="OrderConfirmation.aspx.designer.cs" changeDate="2006-01-23 18:26:37Z" />
+    </Files>
+    <Methods>
+      <Method name="DoLoad">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="id" type="System.String" />
+        </Parameters>
+      </Method>
+
+    </Methods>
+  </Page>
+
+  <Page url="/NewsEdit.aspx">
+    <Files>
+      <File name="NewsEdit.aspx" changeDate="2006-02-01 23:34:59Z" />
+      <File name="NewsEdit.aspx.cs" changeDate="2007-06-25 16:16:22Z" />
+      <File name="NewsEdit.aspx.designer.cs" changeDate="2006-01-23 18:26:37Z" />
+    </Files>
+    <Methods>
+      <Method name="DoLoad">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="true" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+          <Parameter name="id" type="System.String" />
+        </Parameters>
+      </Method>
+      <Method name="DoCreate">
+        <Attributes>
+          <Attribute name="MetaSapiens.PageMethods.PageMethodAttribute">
+            <Argument value="false" />
+          </Attribute>
+        </Attributes>
+        <Parameters>
+        </Parameters>
+      </Method>
+
+    </Methods>
+  </Page>
+  
+  
+</Pages>

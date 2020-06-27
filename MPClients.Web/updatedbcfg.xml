@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<updateinfo>
+  <downloadmodule name="mpmobile08.sdf" timestamp="">
+    download/mpmobile08.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile09.sdf" timestamp="">
+    download/mpmobile09.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile01.sdf" timestamp="">
+    download/mpmobile01.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile02.sdf" timestamp="">
+    download/mpmobile02.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile03.sdf" timestamp="">
+    download/mpmobile03.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile10.sdf" timestamp="">
+    download/mpmobile10.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile05.sdf" timestamp="">
+    download/mpmobile05.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile11.sdf" timestamp="">
+    download/mpmobile11.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile12.sdf" timestamp="">
+    download/mpmobile12.zip
+  </downloadmodule>
+  <downloadmodule name="mpmobile14.sdf" timestamp="">
+    download/mpmobile14.zip
+  </downloadmodule>
+
+  <downloadmodule name="mpmobile15.sdf" timestamp="">
+    download/mpmobile15.zip
+  </downloadmodule>
+
+  <downloadmodule name="mpmobile16.sdf" timestamp="">
+    download/mpmobile16.zip
+  </downloadmodule>
+
+  <downloadmodule name="mpmobile17.sdf" timestamp="">
+    download/mpmobile17.zip
+  </downloadmodule>
+
+  <downloadmodule name="mpmobile60.sdf" timestamp="">
+    download/mpmobile60.zip
+  </downloadmodule>
+
+  <downloadmodule name="mpmobile70.sdf" timestamp="">
+    download/mpmobile70.zip
+  </downloadmodule>
+</updateinfo>

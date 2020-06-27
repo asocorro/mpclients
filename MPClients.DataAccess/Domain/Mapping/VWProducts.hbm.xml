@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+	<class name="VWProducts" table="VWProducts" >
+		<id name="ID" type="System.String" column="Product_ID">
+			<generator class="assigned"/>
+		</id>
+		<property name="Name" column="Name" type="System.String" not-null="true" length="100"/>
+		<property name="ProductCategory" column="ProductCategory" type="System.String" not-null="true" length="50"/>
+		<property name="Description1" column="Description1" type="System.String" not-null="false" length="250"/>
+		<property name="Description2" column="Description2" type="System.String" not-null="false" length="250"/>
+		<property name="Description3" column="Description3" type="System.String" not-null="false" length="250"/>
+		<property name="Stockquantity" column="Stock_quantity" type="System.Int32" not-null="true" />
+		<property name="Price" column="Price" type="System.Decimal" not-null="true" />
+		<property name="DescriptionExt" column="DescriptionExt" type="System.String" not-null="false" length="1000"/>
+		<property name="PriceMultiplier" column="Price_multiplier" type="System.Decimal"/>
+		<property name="ClientID" column="Client_ID" type="System.String" not-null="false"/>
+		<property name="ClientProductPrice" column="ClientProductPrice" type="System.Decimal"/>
+		<property name="Product_ID1" column="Product_ID1" type="System.String" not-null="true" length="50"/>
+		<property name="NameClean" column="NameClean" type="System.String" not-null="true" />
+		<property name="Description1Clean" column="Description1Clean" type="System.String" not-null="true" />
+		<property name="DescriptionExtClean" column="DescriptionExtClean" type="System.String" not-null="true" />
+		<property name="CategoryDescription" column="CategoryDescription" type="System.String" not-null="true" length="250"/>
+	</class>
+</hibernate-mapping>

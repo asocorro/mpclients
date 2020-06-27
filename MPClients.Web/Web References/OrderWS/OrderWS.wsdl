@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="SendOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="salesPersonID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orders" type="tns:ArrayOfOrder" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Order" nillable="true" type="tns:Order" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Order">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:DomainObjectOfInt32">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="PONumber" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="OrderDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="SendDate" nillable="true" type="s:dateTime" />
+              <s:element minOccurs="0" maxOccurs="1" name="Note" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ClientID" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="SalespersonID" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="OrderDetails" type="tns:ArrayOfOrderDetail" />
+              <s:element minOccurs="0" maxOccurs="1" name="OrderNo" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="DomainObjectOfInt32" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderDetail">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:DomainObjectOfInt32">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="OrderID" nillable="true" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="PONumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ProductID" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Quantity" nillable="true" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="NetPrice" nillable="true" type="s:decimal" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OrderDetail" nillable="true" type="tns:OrderDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SendOrdersResponse">
+        <s:complexType />
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SendOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:SendOrders" />
+  </wsdl:message>
+  <wsdl:message name="SendOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:SendOrdersResponse" />
+  </wsdl:message>
+  <wsdl:portType name="OrderWSSoap">
+    <wsdl:operation name="SendOrders">
+      <wsdl:input message="tns:SendOrdersSoapIn" />
+      <wsdl:output message="tns:SendOrdersSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OrderWSSoap" type="tns:OrderWSSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendOrders">
+      <soap:operation soapAction="http://tempuri.org/SendOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="OrderWSSoap12" type="tns:OrderWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendOrders">
+      <soap12:operation soapAction="http://tempuri.org/SendOrders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="OrderWS">
+    <wsdl:port name="OrderWSSoap" binding="tns:OrderWSSoap">
+      <soap:address location="http://localhost/MPMobileWS/OrderWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="OrderWSSoap12" binding="tns:OrderWSSoap12">
+      <soap12:address location="http://localhost/MPMobileWS/OrderWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

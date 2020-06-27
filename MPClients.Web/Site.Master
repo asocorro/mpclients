@@ -1,0 +1,262 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MPClients.Site" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Mascaro Porter</title>
+    <meta content="Mascaro Porter" name="title"/>
+    <meta content="For more information about Mascaro Porter, please contact us at (787) 782-4121."
+        name="description"/>
+    <meta content="Mascaro Porter, MPClients, Repuestos" name="keywords"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=7"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="shortcut icon" href="http://www.mpclients.com/favicon.ico" />
+</head>
+<body>
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" LoadScriptsBeforeUI="true" runat="server">
+    </asp:ScriptManager>
+    <div>
+        <table cellspacing="0" cellpadding="0" height="100" width="100%" border="0">
+            <tr valign="middle" height="70">
+                <td>
+                    <br />
+                    <a href="http://www.MascaroPorter.com/" class="logoTitle" target="_blank">
+                        <img src="Images/Logo.jpg" border="0" /></a>
+                    <br />
+                </td>
+                <td valign="top" colspan="2" nowrap align="right" width="100%" class="legalese">
+                    <a class="legalese" href="Contactus.aspx" style="text-decoration: none;">
+                        <div runat="server" id="userName">
+                        </div>
+                    </a>
+                    <asp:LoginStatus ID="LoginStatus1" runat="server" LogoutPageUrl="~/Default.aspx" />
+                    <br />
+                    <br />
+                    <br />
+                    &nbsp;
+                    <label runat="server" id="ProductInfoLabel">
+                    </label>
+                </td>
+                <!--
+                <td valign="top" nowrap align="left" width="5%">
+                </td>
+                -->
+            </tr>
+            <tr>
+                <td colspan="2" class="topnavtext" nowrap="nowrap">
+                    <span runat='server' id='uiproductslink'><a href="Default.aspx">HOME</a>
+                        <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                        <asp:LinkButton runat="server" ID="ProductSearch" Text="PRODUCT SEARCH"></asp:LinkButton></span>
+                    <label runat="server" id="lblOrderSearch">
+                        <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                        <asp:LinkButton runat="server" ID="OrderSearch" Text="ORDER SEARCH"></asp:LinkButton>
+                    </label>
+
+                    <label runat="server" id="lblActiveShoppingCarts">
+                        <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                        <a href="OrdersResume.aspx">ACTIVE SHOPPING CARTS</a>
+                    </label>
+                    <label runat="server" id="lblNewsSearch">
+                        <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                        <a href="NewsSearch.aspx">NEWS SEARCH</a>
+                    </label>
+                    <label runat="server" id="lblUserSearch">
+                        <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                        <a href="Users.aspx">USER SEARCH</a>
+                    </label>
+                    <label runat="server" id="lblClients">
+                         <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                        <a href="Clients.aspx">CLIENTS</a>
+                    </label>
+                    <label runat="server" id="lblSearchConfiguration">
+                         <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                         <a href="SearchConfiguration.aspx">SEARCH CONFIGURATION</a>
+                    </label>
+
+                    <label runat="server" id="lblAdministration">
+                         <img src="images/topnav_separator.gif" alt=" " height="10" width="1" />
+                         <a href="Administration.aspx">ADMINISTRATION</a>
+                    </label>
+
+                    <img src="images/topnav_separator.gif" alt=" " height="10" width="1" runat='server'
+                        id='contactseparator' />
+                    <a href="Contactus.aspx">CONTACT US</a>
+                </td>
+                <td align="right" class="topnavtext" nowrap="nowrap">
+                    <asp:LinkButton runat="server" ID="ViewShoppingCart" PostBackUrl="ShoppingCart.aspx">VIEW SHOPPING CART</asp:LinkButton>
+                    &nbsp;&nbsp;&nbsp;
+                </td>
+                <!--
+                <td align="right" class="topnavtext" nowrap="nowrap">
+                </td>
+                -->
+            </tr>
+        </table>
+        <table cellspacing="0" cellpadding="0" width="100%" border="0">
+            <tr>
+                <td valign="top">
+                    <asp:ContentPlaceHolder ID="BodyPlaceHolder" runat="server">
+                    </asp:ContentPlaceHolder>
+                </td>
+                <td align="right" valign="top" width="200px" style="padding-top: 10px;">
+                    <div>
+                        <table cellspacing="0" cellpadding="0" width="200" style="border: 1px solid rgb(204, 204, 204);"
+                            runat="server" id="uiClientTableInfo">
+                            <tr>
+                                <td class="rightPanelTitle" align="center">
+                                    <b>CLIENT</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    <br />
+                                    <table cellspacing="0" cellpadding="0" width="100%">
+                                        <tr>
+                                            <td style="padding-left: 2px;" colspan="2" align="center">
+                                                Las consultas y &oacute;rdenes se est&aacute;n ejecutando a nombre de este cliente:
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-left: 2px;" colspan="2" align="center">
+                                                <strong>
+                                                    <div runat="server" id="uiClientInfo">
+                                                    </div>
+                                                </strong>
+                                                <br />
+                                                <asp:Button runat='server' ID="uiChangeClient" Text="Change Client" />&nbsp;
+                                                <asp:Button runat='server' ID="uiReset" Text="Reset" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                </td>
+                            </tr>
+                        </table>
+                        <table cellspacing="0" cellpadding="0" width="200" style="border: 1px solid rgb(204, 204, 204);">
+                            <tr>
+                                <td class="rightPanelTitle" align="center">
+                                    <b>CATALOG LINKS</b>
+                                </td>
+                            </tr>
+                      
+                            <tr>
+                                <td>
+                                    <asp:ListView  runat="server" ID="CatalogLinks" AllowPaging="False" DataSourceID="xmlCatalogLinks">
+                                        <ItemTemplate>
+                                            <tr>
+                                                <td align="left" class="xrlvI" style="border-right: 0px; padding-left: 5px">
+                                                    <asp:HyperLink ID="HyperLink2" Target="_blank" runat="server" NavigateUrl='<%# XPath("LinkUrl") %>'><%# XPath("LinkText") %></asp:HyperLink>
+                                                </td>
+                                            </tr>
+                                        </ItemTemplate>
+                                        <EmptyDataTemplate>
+                                            <div>
+                                                <div class="rlvEmpty">
+                                                    <asp:Literal ID="Literal1" runat="server" Text="No items" />.</div>
+                                            </div>
+                                        </EmptyDataTemplate>
+                                        <LayoutTemplate>
+                                            <div style="border-style: none;">
+                                                <div class="xgreen-box">
+                                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                                        <td id="itemPlaceholder" runat="server">
+                                                        </td>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </LayoutTemplate>
+                                    </asp:ListView>
+                                </td>
+                                </tr>
+                        </table>
+                        <br />
+                          <table runat="server" id="tblOtherResources" cellspacing="2" cellpadding="2" width="200" style="border: 1px solid rgb(204, 204, 204);">
+                            <tr>
+                                <td class="rightPanelTitle" align="center">
+                                    <b>RESOURCES</b>
+                                </td>
+                            </tr>
+                           
+                            <tr>
+                                <td>
+                                    <asp:ListView runat="server" ID="ListView1" AllowPaging="False" DataSourceID="xmlOtherResources">
+                                        <ItemTemplate>
+                                            <tr>
+                                                <td align="left" class="xrlvI" style="border-right: 0px; padding-left: 5px">
+                                                    <asp:HyperLink ID="HyperLink2" Target="_blank" runat="server" NavigateUrl='<%# XPath("LinkUrl") %>'><%# XPath("LinkText") %></asp:HyperLink>
+                                                </td>
+                                            </tr>
+                                        </ItemTemplate>
+                                        <EmptyDataTemplate>
+                                            <div>
+                                                <div class="rlvEmpty">
+                                                    <asp:Literal ID="Literal1" runat="server" Text="No items" />.</div>
+                                            </div>
+                                        </EmptyDataTemplate>
+                                        <LayoutTemplate>
+                                            <div style="border-style: none">
+                                                <div class="xgreen-box">
+                                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                                        <td id="itemPlaceholder" runat="server">
+                                                        </td>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </LayoutTemplate>
+                                    </asp:ListView>
+                                </td>
+                                </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+            <asp:XmlDataSource ID="xmlCatalogLinks" runat="server" DataFile="Data/CatalogLinks.xml">
+        </asp:XmlDataSource>
+        <asp:XmlDataSource ID="xmlOtherResources" runat="server" DataFile="Data/OtherResources.xml">
+        </asp:XmlDataSource>
+        <div id="footer">
+            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <tr>
+                    <td class="legalese" valign="top" align="right" width="50%">
+                        &nbsp;
+                    </td>
+                    <td class="legalese" valign="top" align="left" width="50%">
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td class="legalese" valign="top" align="left" width="50%">
+                        Copyright © 2002-2013, Mascaro Porter. All rights reserved.
+                    </td>
+                    <td class="legalese" valign="top" align="right" width="50%">
+                        <a class="legalese" href="contactus.aspx">Contact Us</a><span class="navlink"> | <a
+                            class="legalese" href="TermsOfUse.aspx">Terms of Use</a><span class="navlink"> </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="legalese" valign="top" align="right" width="50%">
+                        &nbsp;
+                    </td>
+                    <td class="legalese" valign="top" align="left" width="50%">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <telerik:RadWindowManager ID="Singleton" runat="server" Behavior="Close,Move" EnableViewState="false">
+        <Windows>
+            <telerik:RadWindow ID="uxMessageBox" Behavior="Maximize,Minimize,Resize,Close,Move"
+                VisibleOnPageLoad="false" Left="5px" Top="5px" Modal="true" runat="server" Width="300px"
+                Height="200px" Title="MPClients::Message" VisibleStatusbar="false">
+            </telerik:RadWindow>
+        </Windows>
+    </telerik:RadWindowManager>
+    </form>
+</body>
+</html>

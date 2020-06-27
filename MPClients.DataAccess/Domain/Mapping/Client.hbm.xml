@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+  <class name="Client" table="Client" >
+    <id name="ID" type="System.String" column="Client_ID">
+      <generator class="assigned"/>
+    </id>
+    <property name="Name" column="Name" type="System.String" not-null="false" length="250"/>
+    <property name="Contactperson" column="Contact_person" type="System.String" not-null="false" length="100"/>
+    <property name="Address1" column="Address1" type="System.String" not-null="false" length="250"/>
+    <property name="Address2" column="Address2" type="System.String" not-null="false" length="250"/>
+    <property name="Town" column="Town" type="System.String" not-null="false" length="100"/>
+    <property name="Country" column="Country" type="System.String" not-null="false" length="100"/>
+    <property name="Telephonenumber" column="Telephone_number" type="System.String" not-null="false" length="25"/>
+    <property name="Active" column="Active" type="System.Boolean" not-null="false" />
+    <property name="Territory" column="Territory" type="System.String" not-null="false" length="2" update="0" insert="0"/>
+
+  </class>
+  <class name="ClientHoldDate" table="ClientHoldDate" >
+    <id name="ID" type="System.String" column="Client_ID">
+      <generator class="assigned"/>
+    </id>
+    <property name="HoldFromDate" column="HoldFromDate" type="System.DateTime" not-null="false" />
+  </class>
+  
+</hibernate-mapping>

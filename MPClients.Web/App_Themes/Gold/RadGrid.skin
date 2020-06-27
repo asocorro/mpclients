@@ -1,0 +1,5 @@
+<telerik:RadGrid Font-Size="6pt"  HeaderStyle-Font-Names="Arial" 
+ItemStyle-Font-Names="Arial" AlternatingItemStyle-Font-Names="Arial" 
+runat="server" SkinID="Office2007" GridLines="None"  >
+</telerik:RadGrid>
+

@@ -1,0 +1,50 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MPClients.Web.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TOPResults1" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="TOPResults2" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="SMTPServer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">xxxxxxxxxxxxxx</Value>
+    </Setting>
+    <Setting Name="SMTPPort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="SMTPSendUsing" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="SMTPSendPassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">xxxxxxxxxxxxx</Value>
+    </Setting>
+    <Setting Name="SmtpMailServer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">xxxxxxxxxxxxx</Value>
+    </Setting>
+    <Setting Name="SalespersonID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">99</Value>
+    </Setting>
+    <Setting Name="SMTPSendUserName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">postmaster@mpclients.com</Value>
+    </Setting>
+    <Setting Name="MailTo" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">mpcinc@prtc.net</Value>
+    </Setting>
+    <Setting Name="MPClients_Web_OrderWS_OrderWS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/MPMobileWS/OrderWS.asmx</Value>
+    </Setting>
+    <Setting Name="MPClients_Web_OrderWS_OrderWS_Alternate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://mascaro.no-ip.info:8084/MPMobileWS/OrderWS.asmx</Value>
+    </Setting>
+    <Setting Name="SearchWhereClause" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">
+                    Product_ID1 LIKE '%{0}%' OR NameClean LIKE '%{0}%' OR Description1Clean LIKE '%{0}%' OR DescriptionExtClean LIKE '%{0}%'
+                </Value>
+    </Setting>
+    <Setting Name="TimeZoneOffset" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">-4&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

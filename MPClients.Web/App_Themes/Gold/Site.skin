@@ -1,0 +1,44 @@
+
+<asp:Login SkinID="CoreLogin" runat="server" Font-Names="Arial" Font-Size="0.8em"
+    BackColor="White" BorderPadding="0" BorderColor="#284775" FailureText="Incorrect user name or password.">
+    <LoginButtonStyle Font-Names="tahoma" BorderStyle="Solid" Width="80px" />
+    <InstructionTextStyle Font-Names="tahoma" BorderColor="white" />
+    <TitleTextStyle Font-Bold="true" ForeColor="#F7F6F3" BackColor="#5D7B9D" Height="2em"
+        BorderWidth="0" VerticalAlign="Middle" />
+    <LabelStyle HorizontalAlign="left" Font-Size="12px" Font-Names="tahoma" />
+    <TextBoxStyle ForeColor="#5D7B9D" BorderColor="#5D7B9D" BorderStyle="Solid" BorderWidth="1px" />
+    <FailureTextStyle ForeColor="#990000" />
+    <CheckBoxStyle ForeColor="#5D7B9D" />
+</asp:Login>
+<asp:Label runat="server" SkinID="FeedbackOK" ForeColor="green" />
+<asp:Label runat="server" SkinID="FeedbackKO" ForeColor="red" />
+<asp:Button runat="server"  SkinID="Button" Font-Size="9pt" />
+<asp:TextBox runat="server" BorderColor="#7b9ebd" BorderStyle="Solid" BorderWidth="1px"
+    Font-Size="9pt" Font-Names="Arial" Height="16px"></asp:TextBox>
+<asp:CheckBox runat="server" SkinID="CheckBoxSkin" BorderWidth="0" BorderStyle="none" />
+<asp:DropDownList runat="server" Font-Size="9pt" Font-Names="Arial">
+</asp:DropDownList>
+<asp:ImageButton runat="server" SkinID="StatusWidth" Height="16px" ImageUrl="images/taskStatus.gif">
+</asp:ImageButton>
+<asp:DropDownList SkinID="SizeableDD" Font-Names="Arial" runat="server" Font-Size="8pt">
+</asp:DropDownList>
+<asp:ListBox runat="server" Font-Names="Arial" Font-Size="8pt" Width="99.9%"></asp:ListBox>
+<asp:ListBox SkinID="SizeableLB" Font-Names="Arial" runat="server" Font-Size="8pt"></asp:ListBox>
+<telerik:RadNumericTextBox SkinID="Office2007" ShowSpinButtons="true" ButtonsPosition="Right"
+    runat="server">
+</telerik:RadNumericTextBox>
+<telerik:RadDatePicker Width="200px" runat="server" MaxDate="2099-12-16">
+    <Calendar >
+    </Calendar>
+    <DateInput >
+    </DateInput>
+</telerik:RadDatePicker>
+<telerik:RadTimePicker runat="server" TimeView-HeaderText="Seleccione">
+    <DateInput >
+    </DateInput>
+</telerik:RadTimePicker>
+<telerik:RadMaskedTextBox DisplayFormatPosition="Left" HideOnBlur="true" EmptyMessage=""
+    SkinID="Telefono" Style="width: 404px;" runat="server" Mask="(###) ###-#### ext. ######"
+    DisplayMask="(###) ###-#### ext. ######" DisplayPromptChar=" "  />
+    
+<telerik:RadComboBox  runat=server Width="300px" Height="200px" Font-Names="Arial" Font-Size="9pt" ></telerik:RadComboBox>
