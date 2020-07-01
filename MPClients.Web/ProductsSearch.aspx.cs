@@ -587,16 +587,46 @@ namespace MPClients
             strCombinedSizes4 = Helper.NormalizeText(strCombinedSizes4);
 
             string productsQry = string.Empty;
-            productsQry += Helper.NormalizeText(TextBox1.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox2.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox3.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox4.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox5.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox6.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox7.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox8.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox9.Text) + ",";
-            productsQry += Helper.NormalizeText(TextBox10.Text) + ",";
+            string t1 = Helper.NormalizeText(TextBox1.Text);
+            productsQry += (t1.Length > 0 ? t1 + "," : "");
+
+            string t2 = Helper.NormalizeText(TextBox2.Text);
+            productsQry += (t2.Length > 0 ? t2 + "," : "");
+
+            string t3 = Helper.NormalizeText(TextBox3.Text);
+            productsQry += (t3.Length > 0 ? t3 + "," : "");
+
+            string t4 = Helper.NormalizeText(TextBox4.Text);
+            productsQry += (t4.Length > 0 ? t4 + "," : "");
+
+            string t5 = Helper.NormalizeText(TextBox5.Text);
+            productsQry += (t5.Length > 0 ? t5 + "," : "");
+
+            string t6 = Helper.NormalizeText(TextBox6.Text);
+            productsQry += (t6.Length > 0 ? t6 + "," : "");
+
+            string t7 = Helper.NormalizeText(TextBox7.Text);
+            productsQry += (t7.Length > 0 ? t7 + "," : "");
+
+            string t8 = Helper.NormalizeText(TextBox8.Text);
+            productsQry += (t8.Length > 0 ? t8 + "," : "");
+
+            string t9 = Helper.NormalizeText(TextBox9.Text);
+            productsQry += (t9.Length > 0 ? t9 + "," : "");
+
+            string t10 = Helper.NormalizeText(TextBox10.Text);
+            productsQry += (t10.Length > 0 ? t10 + "," : "");
+
+            // productsQry += Helper.NormalizeText(TextBox1.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox2.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox3.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox4.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox5.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox6.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox7.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox8.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox9.Text) + ",";
+            //productsQry += Helper.NormalizeText(TextBox10.Text) + ",";
 
             string strSearchWhereClause = MPClients.Web.Properties.Settings.Default.SearchWhereClause;
 

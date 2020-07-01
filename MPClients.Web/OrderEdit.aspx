@@ -84,12 +84,14 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        Pickup method:
+                                                        Pickup method: <asp:TextBox runat="server" ID="uxNumberOfProducts" Visible="false"></asp:TextBox>
                                                     </td>
                                                     <td>
                                                         <asp:RadioButton runat="server" ID="uxPickupWhse" GroupName="Pickup" Text="Pickup at warehouse (Recoger en almacén)" />
                                                         <br />
-                                                        <asp:RadioButton runat="server" ID="uxPickupDelivery" GroupName="Pickup" Text="Delivery (Enviar por ruta)" />
+                                                        <asp:RadioButton runat="server" ID="uxPickupDelivery" GroupName="Pickup" Text="Delivery (Enviar por ruta)" Checked="true" />
+                                                        <br />
+                                                        <i runat="server" id="uxPickupDeliveryMessage">Placeholder for text.</i>
                                                     </td>
                                                 </tr>
                                             </table>

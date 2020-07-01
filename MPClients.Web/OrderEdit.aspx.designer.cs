@@ -94,6 +94,15 @@ namespace MPClients.Web {
         protected global::System.Web.UI.WebControls.TextBox uxPONumber;
         
         /// <summary>
+        /// uxNumberOfProducts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox uxNumberOfProducts;
+        
+        /// <summary>
         /// uxPickupWhse control.
         /// </summary>
         /// <remarks>
@@ -110,6 +119,15 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton uxPickupDelivery;
+        
+        /// <summary>
+        /// uxPickupDeliveryMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl uxPickupDeliveryMessage;
         
         /// <summary>
         /// uxOrderStatus control.

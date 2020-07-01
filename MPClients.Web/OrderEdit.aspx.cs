@@ -178,7 +178,6 @@ namespace MPClients.Web
                 GridDataItem dataItem = (GridDataItem)e.Item;
                 Label lbl = dataItem["Template1"].FindControl("uxPrice") as Label;
                 sum += double.Parse(lbl.Text);
-
                 lbl.Text = Convert.ToDecimal(lbl.Text).ToString("C");
             }
             else if (e.Item is GridFooterItem)
@@ -197,6 +196,29 @@ namespace MPClients.Web
             criteria.AddOrder(new Order("ProductID", true));
             IList<MPClients.DataAccess.Domain.OrderDetail> orderDetails
                 = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
+
+            int intNumberOfProducts = 0;
+            foreach (var item in orderDetails)
+            {
+                if (!item.IsFriend)
+                {
+                    intNumberOfProducts += 1;
+                }
+            }
+
+            uxNumberOfProducts.Text = intNumberOfProducts.ToString();
+
+            bool boolRestrictOrderProductsForPickup = Convert.ToBoolean(Convert.ToInt32(ConfigurationManager.AppSettings["RestrictOrderProductsForPickup"]));
+            int intMaxOrderProductsForPickup = Convert.ToInt32(ConfigurationManager.AppSettings["MaxOrderProductsForPickup"].ToString());
+
+            uxPickupWhse.Visible = !boolRestrictOrderProductsForPickup || intNumberOfProducts <= intMaxOrderProductsForPickup;
+            uxPickupDeliveryMessage.Visible = !uxPickupWhse.Visible;
+
+            if (uxPickupDeliveryMessage.Visible) {
+                uxPickupDeliveryMessage.InnerHtml = "Por el momento no estamos aceptando órdenes de más de " + intMaxOrderProductsForPickup.ToString();
+                uxPickupDeliveryMessage.InnerHtml += " artículos para recoger en el almacén. <br/> Para activar la opción de recogido,";
+                uxPickupDeliveryMessage.InnerHtml += " por favor edite su carrito de compras y reduzca a " + intMaxOrderProductsForPickup.ToString() + " ó menos el número de artículos.";
+            }
 
             uxGrid.DataSource = orderDetails;
         }
