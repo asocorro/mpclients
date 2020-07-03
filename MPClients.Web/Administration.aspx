@@ -9,8 +9,7 @@
                     width="100%">
                     <tbody>
                         <tr>
-                            <td class="mainheading" height="30">
-                                Administration
+                            <td class="mainheading" height="30">Administration
                             </td>
                         </tr>
                     </tbody>
@@ -27,12 +26,29 @@
                             </a>
                         </td>
                         <td class="bodycopy">
-                            <span style="font-size: 13pt; font-weight: 600; color: Gray; font-family: segoe ui">
-                                Load Holds File</span>
+                            <span style="font-size: 13pt; font-weight: 600; color: Gray; font-family: segoe ui">Load Holds File</span>
+                            <br />
                             <br />
                             Load a file with clients and hold dates.
                         </td>
                     </tr>
+                </table>
+                <br />
+                <table border="0" cellpadding="4" cellspacing="4" width="100%" style="border: 1px solid rgb(204, 204, 204);">
+                    <tr>
+                        <td style="width: 60px">
+                            <a href="Configuration.aspx">
+                                <asp:Image ImageUrl="~/Images/Settings.png" runat="server" />
+                            </a>
+                        </td>
+                        <td class="bodycopy">
+                            <span style="font-size: 13pt; font-weight: 600; color: Gray; font-family: segoe ui">General Settings</span>
+                            <br />
+                            <br />
+                            General configuration settings.
+                        </td>
+                    </tr>
+
 
                 </table>
             </td>

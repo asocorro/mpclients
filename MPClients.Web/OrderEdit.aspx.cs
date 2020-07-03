@@ -207,9 +207,29 @@ namespace MPClients.Web
             }
 
             uxNumberOfProducts.Text = intNumberOfProducts.ToString();
+            bool boolRestrictOrderProductsForPickup = false;
+            int intMaxOrderProductsForPickup = 0;
 
-            bool boolRestrictOrderProductsForPickup = Convert.ToBoolean(Convert.ToInt32(ConfigurationManager.AppSettings["RestrictOrderProductsForPickup"]));
-            int intMaxOrderProductsForPickup = Convert.ToInt32(ConfigurationManager.AppSettings["MaxOrderProductsForPickup"].ToString());
+            // --
+            //bool boolRestrictOrderProductsForPickup = Convert.ToBoolean(Convert.ToInt32(ConfigurationManager.AppSettings["RestrictOrderProductsForPickup"]));
+            //int intMaxOrderProductsForPickup = Convert.ToInt32(ConfigurationManager.AppSettings["MaxOrderProductsForPickup"].ToString());
+            // --
+
+            string ConfigId = "FF6C1844-8872-438C-9336-9B16957402B7";
+
+            MPClients.DataAccess.Domain.Configuration config
+                = UnitOfWork.Session.Get<MPClients.DataAccess.Domain.Configuration>(new Guid(ConfigId));
+
+            if (config == null)
+            {
+                base.MasterPage.DisplayMessage("Error Loading the News");
+            }
+            else
+            {
+                boolRestrictOrderProductsForPickup = Convert.ToBoolean(config.RestrictOrderProductsForPickup);
+                intMaxOrderProductsForPickup = int.Parse(config.MaxOrderProductsForPickup.ToString());
+            }
+
 
             uxPickupWhse.Visible = !boolRestrictOrderProductsForPickup || intNumberOfProducts <= intMaxOrderProductsForPickup;
             uxPickupDeliveryMessage.Visible = !uxPickupWhse.Visible;

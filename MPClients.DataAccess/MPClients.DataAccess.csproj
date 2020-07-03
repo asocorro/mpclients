@@ -88,6 +88,7 @@
     <Compile Include="Domain\Accreditation.cs" />
     <Compile Include="Domain\Category.cs" />
     <Compile Include="Domain\Client.cs" />
+    <Compile Include="Domain\Configuration.cs" />
     <Compile Include="Domain\SearchQuery.cs" />
     <Compile Include="Domain\VWOrders.cs" />
     <Compile Include="Domain\News.cs" />
@@ -166,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\Mapping\SearchQuery.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mapping\Configuration.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -33,6 +33,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -122,6 +123,7 @@
     <Content Include="ClientEdit.aspx" />
     <Content Include="ClientLogo.aspx" />
     <Content Include="Clients.aspx" />
+    <Content Include="Configuration.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="EditClientOrderingForResults.aspx" />
     <Content Include="Images\AvailableCategories.png" />
@@ -200,6 +202,13 @@
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Common\SessionModule.cs" />
     <Compile Include="Common\UrlValidity.cs" />
+    <Compile Include="Configuration.aspx.cs">
+      <DependentUpon>Configuration.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration.aspx.designer.cs">
+      <DependentUpon>Configuration.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Contactus.aspx.cs">
       <DependentUpon>Contactus.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

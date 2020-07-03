@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+  <class name="Configuration" table="Configuration" >
+    <id name="ID" type="System.Guid" column="ID">
+      <generator class="assigned"/>
+    </id> 
+    <property name="RestrictOrderProductsForPickup" column="RestrictOrderProductsForPickup" type="System.Int32" not-null="true" />
+    <property name="MaxOrderProductsForPickup" column="MaxOrderProductsForPickup" type="System.Int32" not-null="true" />
+  </class>
+</hibernate-mapping>
