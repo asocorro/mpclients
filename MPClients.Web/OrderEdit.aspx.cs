@@ -222,14 +222,13 @@ namespace MPClients.Web
 
             if (config == null)
             {
-                base.MasterPage.DisplayMessage("Error Loading the News");
+                base.MasterPage.DisplayMessage("Error Loading Configuration Info");
             }
             else
             {
                 boolRestrictOrderProductsForPickup = Convert.ToBoolean(config.RestrictOrderProductsForPickup);
                 intMaxOrderProductsForPickup = int.Parse(config.MaxOrderProductsForPickup.ToString());
             }
-
 
             uxPickupWhse.Visible = !boolRestrictOrderProductsForPickup || intNumberOfProducts <= intMaxOrderProductsForPickup;
             uxPickupDeliveryMessage.Visible = !uxPickupWhse.Visible;

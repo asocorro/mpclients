@@ -33,7 +33,7 @@
                                         <td>
                                             Restrict Order Products for Pickup:</td>
                                         <td>
-                                            <asp:CheckBox runat="server" ID="chkRestrictOrderProductsForPickup" Width="300"></asp:CheckBox>
+                                            <asp:CheckBox runat="server" ID="chkRestrictOrderProductsForPickup" onclick="RestrictOnClick(this)" Width="300"></asp:CheckBox>
                                         </td>
                                     </tr>
                                     <tr>
@@ -43,7 +43,7 @@
                                         <td>
                                             Maximum Order Products for Pickup:</td>
                                         <td>
-                                            <asp:TextBox runat="server" ID="uxMaxOrderProductsForPickup" Width="400" MaxLength=200></asp:TextBox>
+                                            <asp:TextBox runat="server" ID="uxMaxOrderProductsForPickup" Width="150" MaxLength="2"></asp:TextBox>
                                         </td>
                                     </tr>
                                     <tr>
@@ -61,6 +61,12 @@
             </tr>
         </tbody>
     </table>
+
+    <script type="text/javascript">
+        function RestrictOnClick(ux) {
+            document.getElementById( '<%=uxMaxOrderProductsForPickup.ClientID%>' ).disabled = !ux.checked ;
+        }
+    </script>
 </asp:Content>
 
  

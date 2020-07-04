@@ -41,8 +41,11 @@ namespace MPClients.Web
             ITransaction transaction = session.BeginTransaction();
             MPClients.DataAccess.Domain.Configuration config = session.Get<MPClients.DataAccess.Domain.Configuration>(id);
 
-            config.MaxOrderProductsForPickup = int.Parse(uxMaxOrderProductsForPickup.Text);
-            config.RestrictOrderProductsForPickup = int.Parse(chkRestrictOrderProductsForPickup.Text);
+            if (chkRestrictOrderProductsForPickup.Checked)
+            {
+                config.MaxOrderProductsForPickup = int.Parse(uxMaxOrderProductsForPickup.Text);
+            }
+            config.RestrictOrderProductsForPickup = chkRestrictOrderProductsForPickup.Checked ? 1 : 0;
 
             session.Save(config);
             transaction.Commit();
@@ -57,7 +60,7 @@ namespace MPClients.Web
 
             if (config == null)
             {
-                base.MasterPage.DisplayMessage("Error Loading the News");
+                base.MasterPage.DisplayMessage("Error Loading Configuration Info");
             }
             else
             {
