@@ -12,6 +12,7 @@
                             <tr>
                                 <td class="mainheading" height="30">
                                     Home Page
+                                    <asp:Label runat="server" ID="lblPassword" Font-Bold="true"></asp:Label>
                                 </td>
                             </tr>
                         </tbody>

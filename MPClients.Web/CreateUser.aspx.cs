@@ -80,17 +80,23 @@ namespace MPClients
                                                    ,[PriceQuerys]
                                                    ,[ChangePassword]
                                                    ,[ClientName]
-                                                    ,Territory)
+                                                    , Territory
+                                                    , AllowDelivery
+                                                    , AllowPickup)
                                              VALUES
                                                    ('{0}'
                                                    ,'{1}'
                                                    ,'{2}'
                                                    ,'{3}'
-                                                   ,0
-                                                   ,{5}
+                                                   , 0
+                                                   , {5}
                                                    ,'{4}'
-                                                   ,'{6}')";
-                    insert = String.Format(insert, new Guid(user.ProviderUserKey.ToString()), uxPassword.Text + "1@mpclients.com", uxUserName.Text, uxClients.SelectedValue, uxClients.Text, uxChangePassword.Checked ? 1 : 0, uiTerritory.Text);
+                                                   ,'{6}'
+                                                   ,'{7}'
+                                                   ,'{8}'
+                                                   )";
+                    insert = String.Format(insert, new Guid(user.ProviderUserKey.ToString()), uxPassword.Text + "1@mpclients.com", uxUserName.Text, uxClients.SelectedValue, uxClients.Text, uxChangePassword.Checked ? 1 : 0, uiTerritory.Text
+                            , uxAllowDelivery.Checked, uxAllowPickup.Checked);
 
                     SqlConnection sqlConn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalSqlServer"].ConnectionString);
                     sqlConn1.Open();

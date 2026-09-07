@@ -87,11 +87,11 @@
                                                         Pickup method: <asp:TextBox runat="server" ID="uxNumberOfProducts" Visible="false"></asp:TextBox>
                                                     </td>
                                                     <td>
-                                                        <asp:RadioButton runat="server" ID="uxPickupWhse" GroupName="Pickup" Text="Pickup at warehouse (Recoger en almacén)" />
+                                                        <asp:RadioButton runat="server" ID="uxPickupWhse" GroupName="Pickup" Text="Pickup at warehouse (Recoger en almac&eacute;n)" />
                                                         <br />
-                                                        <asp:RadioButton runat="server" ID="uxPickupDelivery" GroupName="Pickup" Text="Delivery (Enviar por ruta)" Checked="true" />
+                                                        <asp:RadioButton runat="server" ID="uxPickupDelivery" GroupName="Pickup" Text="Delivery (Enviar por ruta)" Visible="true" />
                                                         <br />
-                                                        <i runat="server" id="uxPickupDeliveryMessage">Placeholder for text.</i>
+                                                        <i runat="server" id="uxPickupWhseMessage">Placeholder for text.</i>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -111,7 +111,8 @@
                                                         Comments:
                                                     </td>
                                                     <td>
-                                                        <asp:TextBox Rows="5" runat="server" ID="uxComments" Width="300" TextMode="MultiLine"
+                                                        <asp:TextBox Rows="5" runat="server" ID="uxComments" Width="500" TextMode="MultiLine" 
+                                                        placeholder="Solo comentarios sobre preparaci&oacute;n o env&iacute;o (no saludos ni mensajes personales). Los pedidos con comentarios se procesan manualmente y pueden causar retrasos."
                                                             SkinID="MultiLine"></asp:TextBox>
                                                     </td>
                                                 </tr>

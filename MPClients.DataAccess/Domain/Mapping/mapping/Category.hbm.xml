@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+    <class name="Category" table="VWCategory" >
+    <id name="ID" type="System.String" column="Category_ID">
+        <generator class="assigned"/>
+    </id>
+    <property name="Description" column="Description" type="System.String" not-null="true" length="250"/>
+ </class>
+</hibernate-mapping>

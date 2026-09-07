@@ -33,11 +33,13 @@
                                                     <br />
                                                     Mascaró-Porter & Co., Inc.
                                                     <br />
-                                                    Inc. Calle Segarra
+                                                    Reparto Industrial Bechara
                                                     <br />
-                                                    Esq. Blay Reparto Industrial Bechara
+                                                    217 Calle Segarra, Esq. Calle Blay
                                                     <br />
-                                                    Pueblo Viejo, PR 00920 </li>
+                                                    KM. 3.4 Avenida Kennedy
+                                                    <br />
+                                                    San Juan, Puerto Rico 00920 </li>
                                             </ul>
                                         </td>
                                         <td>
@@ -74,57 +76,7 @@
                             </td>
                         </tr>
                     </table>
-                    <br />
-                    <table class="bodyTable" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td colspan="2" class="bodyTitleBak" height="22">
-                                <div class="bodyTitle">
-                                    Contact Form</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="bodycopy" valign="top" colspan="2">
-                                You may also contact us by completing the following form. Hope to hear from you
-                                soon!
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="bodycopy" colspan="2">
-                                <table>
-                                    <tr>
-                                        <td style="width: 15%">
-                                            <strong>Your name:</strong></td>
-                                        <td>
-                                            <asp:TextBox runat="server" ID="uxName"></asp:TextBox></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Your e-mail address:</strong>
-                                        </td>
-                                        <td>
-                                            <asp:TextBox runat="server" ID="uxEmail"></asp:TextBox>
-                                            We need it in order to respond to you.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1" valign="top">
-                                            <strong>How may we help you?</strong>
-                                        </td>
-                                    
-                                        <td colspan="2">
-                                            <textarea style="font-family:arial; font-size: 9pt" runat="server" id="uComments" rows="10" SkinID="MultiLine" cols=75></textarea>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1" align="left">
-                                            <div style="padding-top: 5px; padding-right: 45px" >
-                                                <input style="font-family:arial; font-size: 9pt" type="button" value="Submit" id="uxSubmit" runat="server">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                    </table>
+                    
                 </td>
             </tr>
         </tbody>

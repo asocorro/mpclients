@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MPClients {
-    
-    
-    public partial class CreateUser {
-        
+namespace MPClients
+{
+
+
+    public partial class CreateUser
+    {
+
         /// <summary>
         /// uxClients control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadComboBox uxClients;
-        
+
         /// <summary>
         /// uxUserName control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxUserName;
-        
+
         /// <summary>
         /// RequiredFieldValidator1 control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// NewPasswordLabel control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label NewPasswordLabel;
-        
+
         /// <summary>
         /// uxPassword control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxPassword;
-        
+
         /// <summary>
         /// NewPasswordRequired control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator NewPasswordRequired;
-        
+
         /// <summary>
         /// ConfirmNewPasswordLabel control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ConfirmNewPasswordLabel;
-        
+
         /// <summary>
         /// ConfirmNewPassword control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ConfirmNewPassword;
-        
+
         /// <summary>
         /// ConfirmNewPasswordRequired control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator ConfirmNewPasswordRequired;
-        
+
         /// <summary>
         /// NewPasswordCompare control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CompareValidator NewPasswordCompare;
-        
+
         /// <summary>
         /// FailureText control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal FailureText;
-        
+
         /// <summary>
         /// uxChangePassword control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxChangePassword;
-        
+
         /// <summary>
         /// uxActive control.
         /// </summary>
@@ -128,7 +130,25 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxActive;
-        
+
+        /// <summary>
+        /// uxAllowDelivery control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox uxAllowDelivery;
+
+        /// <summary>
+        /// uxAllowPickup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox uxAllowPickup;
+
         /// <summary>
         /// uiTerritory control.
         /// </summary>
@@ -137,7 +157,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadComboBox uiTerritory;
-        
+
         /// <summary>
         /// uxIsAdministrator control.
         /// </summary>
@@ -146,7 +166,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxIsAdministrator;
-        
+
         /// <summary>
         /// uxIsNewsEditor control.
         /// </summary>
@@ -155,7 +175,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxIsNewsEditor;
-        
+
         /// <summary>
         /// uxSearchOnly control.
         /// </summary>
@@ -164,7 +184,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxSearchOnly;
-        
+
         /// <summary>
         /// uxCreateUser control.
         /// </summary>

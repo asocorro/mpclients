@@ -1,6 +1,8 @@
 using System;
 using System.Web;
 using System.Configuration;
+using System.Web.Hosting;
+using System.Diagnostics;
 
 using NHibernate;
 using NHibernate.Cfg;
@@ -40,18 +42,21 @@ namespace MPClients.DataAccess.NHibernate
         /// <summary> 
         /// NHibernate Configuration 
         /// </summary> 
-        private static readonly Configuration configuration ;
+        private static Configuration configuration;
 
         /// <summary> 
         /// NHibernate SessionFactory 
         /// </summary> 
-        private static readonly ISessionFactory sessionFactory ;
+        private static ISessionFactory sessionFactory;
 
         /// <summary> 
         /// NHibernate Session. This is only used for NUnit testing (ie. when HttpContext 
         /// is not available. 
         /// </summary> 
-        private static readonly ISession session;
+        private static ISession session;
+
+        private static readonly object factoryLock = new object();
+        private static bool initialized = false;
 
         /// <summary> 
         /// None public constructor. Prevent direct creation of this object.  
@@ -61,11 +66,90 @@ namespace MPClients.DataAccess.NHibernate
         /// <summary> 
         /// See beforefieldinit 
         /// </summary> 
-        static UnitOfWork() {
-            string configFile = HttpContext.Current.Request.MapPath(ConfigurationSettings.AppSettings["nhibernate.config"]);
-            configuration = new Configuration();
-            sessionFactory = configuration.Configure(configFile).BuildSessionFactory();
-            session = sessionFactory.OpenSession();
+        // Static constructor left empty to avoid HttpContext usage at type init.
+        static UnitOfWork() { }
+
+        /// <summary>
+        /// Initialize NHibernate configuration and build the SessionFactory in a thread-safe way.
+        /// Call this from Application_Start to pre-warm mappings and avoid concurrent initialization.
+        /// </summary>
+        public static void Initialize()
+        {
+            if (initialized) return;
+            lock (factoryLock)
+            {
+                if (initialized) return;
+                string nhConfig = ConfigurationManager.AppSettings["nhibernate.config"] ?? "~/nhibernate.config";
+                string configFile = HostingEnvironment.MapPath(nhConfig) ?? nhConfig;
+                Log("UnitOfWork.Initialize: nhibernate config file=" + configFile);
+
+                configuration = new Configuration();
+                configuration.Configure(configFile);
+
+                // Try building the SessionFactory, with one retry if there is an XPathException (intermittent mapping parse race)
+                int attempts = 0;
+                while (true)
+                {
+                    attempts++;
+                    try
+                    {
+                        Log("UnitOfWork.Initialize: Starting BuildSessionFactory attempt=" + attempts);
+                        sessionFactory = configuration.BuildSessionFactory();
+                        session = sessionFactory.OpenSession();
+                        initialized = true;
+                        Log("UnitOfWork.Initialize: BuildSessionFactory completed");
+                        break;
+                    }
+                    catch (System.Xml.XPath.XPathException xpe)
+                    {
+                        Log("UnitOfWork.Initialize: XPathException on BuildSessionFactory: " + xpe.Message);
+                        if (attempts >= 2)
+                        {
+                            Log("UnitOfWork.Initialize: Giving up after " + attempts + " attempts");
+                            throw;
+                        }
+                        // brief backoff then retry
+                        System.Threading.Thread.Sleep(200);
+                        continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log("UnitOfWork.Initialize: Exception building SessionFactory: " + ex);
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private static readonly object logLock = new object();
+        private static void Log(string message)
+        {
+            try
+            {
+                Trace.WriteLine(message);
+
+                // If Trace listeners are not configured in host, fallback to writing a small log in App_Data
+                if (Trace.Listeners.Count == 0)
+                {
+                    string basePath = HostingEnvironment.MapPath("~");
+                    if (!string.IsNullOrEmpty(basePath))
+                    {
+                        string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
+                        try
+                        {
+                            lock (logLock)
+                            {
+                                System.IO.Directory.CreateDirectory(logDir);
+                                string path = System.IO.Path.Combine(logDir, "nhibernate_init.log");
+                                string line = DateTime.UtcNow.ToString("o") + " " + message + Environment.NewLine;
+                                System.IO.File.AppendAllText(path, line);
+                            }
+                        }
+                        catch { /* swallow - best effort logging */ }
+                    }
+                }
+            }
+            catch { /* swallow logging errors */ }
         }
 
         /// <summary> 
@@ -80,6 +164,8 @@ namespace MPClients.DataAccess.NHibernate
         {
             get
             {
+                if (!initialized) Initialize();
+
                 ISession session;
                 if (HttpContext.Current == null)
                 {

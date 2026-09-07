@@ -141,6 +141,10 @@ namespace MPClients
             //membershipUser.LastActivityDate = DateTime.Now;
             //membershipUser.PriceQuerys = 0;
 
+            membershipUser.AllowDelivery = uxAllowDelivery.Checked;
+            membershipUser.AllowPickup = uxAllowPickup.Checked;
+
+
             IList<MPClients.DataAccess.Domain.UserCategory> Categories = Helper.GetUserCategories(uxID.Value);
             //delete 
             foreach (UserCategory var in Categories)
@@ -178,7 +182,6 @@ namespace MPClients
             }
 
             session.Save(membershipUser);
-
 
             transaction.Commit();
 
@@ -260,6 +263,9 @@ namespace MPClients
                 uxLastPriceQueryDate.Text = membershipUser.LastPriceQueryDate.ToString();
                 uxPriceQuerys.Text = membershipUser.PriceQuerys.ToString();
                 //uxInHold.Checked =  membershipUser.IsActive.HasValue ? ! membershipUsers.IsActive.Value : true;
+
+                uxAllowDelivery.Checked = membershipUser.AllowDelivery.HasValue ? membershipUser.AllowDelivery.Value : false ;
+                uxAllowPickup.Checked = membershipUser.AllowPickup.HasValue ? membershipUser.AllowPickup.Value : false;
 
                 if (!string.IsNullOrEmpty(membershipUser.Territory))
                 {

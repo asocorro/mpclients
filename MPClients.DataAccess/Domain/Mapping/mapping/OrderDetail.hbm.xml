@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+    <class name="OrderDetail" table="OrderDetail" >
+    <id name="ID" type="System.Guid" column="ID">
+        <generator class="assigned"/>
+    </id>
+    <property name="OrderID" column="OrderID" type="System.Guid" not-null="true" />
+    <property name="Quantity" column="Quantity" type="System.Int32" not-null="true" />
+    <property name="ProductID" column="ProductID" type="System.String" not-null="true" length="50"/>
+    <property name="ShortDescription" column="ShortDescription" type="System.String" not-null="false" length="250"/>
+    <property name="ProductName" column="ProductName" type="System.String" not-null="true" length="100"/>
+    <property name="NetPrice" column="NetPrice" type="System.Decimal" not-null="false" />
+      <property name="IsFriend" column="IsFriend" type="System.Boolean"   />
+      <many-to-one name="Orders" column="OrderID" class="Orders"  update="0"  insert="0" />
+      <many-to-one name="Product" column="ProductID" class="Product"  update="0"  insert="0" />
+    </class>
+</hibernate-mapping>

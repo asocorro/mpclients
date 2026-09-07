@@ -7,11 +7,22 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MPClients {
-    
-    
-    public partial class Default {
-        
+namespace MPClients
+{
+
+
+    public partial class Default
+    {
+
+        /// <summary>
+        /// lblPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPassword;
+
         /// <summary>
         /// uxGrid control.
         /// </summary>

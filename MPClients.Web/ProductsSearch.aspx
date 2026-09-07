@@ -368,7 +368,7 @@ function rowMouseOver(sender, eventArgs)
                         <tr>
                             <td class="bodyTitleBak">
                                 <div class="bodyTitle">
-                                    Search Results
+                                    Search Results&nbsp;&nbsp;<span style="font-weight: normal; font-size: smaller; color: #880808">Resultados son para referencia solamente. Para la aplicación correcta, debe verificar el catálogo del suplidor.</span>
                                 </div>
                             </td>
                         </tr>
@@ -458,6 +458,20 @@ function rowMouseOver(sender, eventArgs)
                                             <telerik:GridButtonColumn ItemStyle-Width="80"  CommandName="AddToChart" Text="Add to Cart" 
                                                 ItemStyle-VerticalAlign="top" UniqueName="AddToChart">
                                             </telerik:GridButtonColumn>
+
+                                            <telerik:GridTemplateColumn UniqueName="TemplateColumn"
+                                                ItemStyle-VerticalAlign="top" ItemStyle-Width="80">
+                                                <ItemTemplate>
+                                                    <asp:HyperLink ID="MoreInfoURL" runat="server"
+                                                        NavigateUrl='<%# Eval("MoreInfoURL") %>'
+                                                        Target="_blank"
+                                                        Visible='<%# !string.IsNullOrEmpty(Convert.ToString(Eval("MoreInfoURL"))) %>'>
+                                                        Click for More Info <img src="images/external.png" height="12" width="12" />
+                                                    </asp:HyperLink>
+                                                    
+                                                </ItemTemplate>
+                                            </telerik:GridTemplateColumn>
+
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>

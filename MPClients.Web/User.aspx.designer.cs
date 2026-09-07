@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MPClients {
-    
-    
-    public partial class User {
-        
+namespace MPClients
+{
+
+
+    public partial class User
+    {
+
         /// <summary>
         /// uxID control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden uxID;
-        
+
         /// <summary>
         /// uxClients control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadComboBox uxClients;
-        
+
         /// <summary>
         /// uxUserName control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxUserName;
-        
+
         /// <summary>
         /// uxActive control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxActive;
-        
+
         /// <summary>
         /// uxLockedOut control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxLockedOut;
-        
+
         /// <summary>
         /// uxInHold control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxInHold;
-        
+
         /// <summary>
         /// uxHoldFromDate control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadDatePicker uxHoldFromDate;
-        
+
         /// <summary>
         /// NewPasswordLabel control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label NewPasswordLabel;
-        
+
         /// <summary>
         /// uxPassword control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxPassword;
-        
+
         /// <summary>
         /// NewPasswordRequired control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator NewPasswordRequired;
-        
+
         /// <summary>
         /// ConfirmNewPasswordLabel control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ConfirmNewPasswordLabel;
-        
+
         /// <summary>
         /// ConfirmNewPassword control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ConfirmNewPassword;
-        
+
         /// <summary>
         /// ConfirmNewPasswordRequired control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator ConfirmNewPasswordRequired;
-        
+
         /// <summary>
         /// uxChangePassword control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxChangePassword;
-        
+
         /// <summary>
         /// uiTerritory control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadComboBox uiTerritory;
-        
+
         /// <summary>
         /// uxIsAdministrator control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxIsAdministrator;
-        
+
         /// <summary>
         /// uxIsNewsEditor control.
         /// </summary>
@@ -164,7 +166,25 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxIsNewsEditor;
-        
+
+        /// <summary>
+        /// uxAllowDelivery control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox uxAllowDelivery;
+
+        /// <summary>
+        /// uxAllowPickup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox uxAllowPickup;
+
         /// <summary>
         /// uxSearchOnly control.
         /// </summary>
@@ -173,7 +193,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox uxSearchOnly;
-        
+
         /// <summary>
         /// uxLastPriceQueryDate control.
         /// </summary>
@@ -182,7 +202,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxLastPriceQueryDate;
-        
+
         /// <summary>
         /// uxPriceQuerys control.
         /// </summary>
@@ -191,7 +211,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxPriceQuerys;
-        
+
         /// <summary>
         /// uxLastLogon control.
         /// </summary>
@@ -200,7 +220,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxLastLogon;
-        
+
         /// <summary>
         /// uxSave control.
         /// </summary>
@@ -209,7 +229,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button uxSave;
-        
+
         /// <summary>
         /// uxCategories control.
         /// </summary>
@@ -218,7 +238,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList uxCategories;
-        
+
         /// <summary>
         /// uxClearAll control.
         /// </summary>
@@ -227,7 +247,7 @@ namespace MPClients {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button uxClearAll;
-        
+
         /// <summary>
         /// uxSelectAll control.
         /// </summary>

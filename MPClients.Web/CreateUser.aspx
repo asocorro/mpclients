@@ -102,6 +102,24 @@
                                     </tr>
                                     <tr>
                                         <td>
+                                            Allow Delivery:
+                                        </td>
+                                        <td>
+                                            <asp:CheckBox runat="server" ID="uxAllowDelivery" SkinID="CheckBoxSkin" Checked="true" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            Allow Pickup:
+                                        </td>
+                                        <td>
+                                            <asp:CheckBox runat="server" ID="uxAllowPickup" SkinID="CheckBoxSkin" Checked="true" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
                                              If this user is sales person, <br />indicate the route(s):
                                         </td>
                                         <td>

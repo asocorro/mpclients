@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MPClients.Web {
-    
-    
-    public partial class OrderEdit {
-        
+namespace MPClients.Web
+{
+
+
+    public partial class OrderEdit
+    {
+
         /// <summary>
         /// uxID control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden uxID;
-        
+
         /// <summary>
         /// Button1 control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Button1;
-        
+
         /// <summary>
         /// uxSendLink control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton uxSendLink;
-        
+
         /// <summary>
         /// uxPrintLink control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl uxPrintLink;
-        
+
         /// <summary>
         /// uxCurrentTime control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxCurrentTime;
-        
+
         /// <summary>
         /// uxRequestedBy control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxRequestedBy;
-        
+
         /// <summary>
         /// uxClientName control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxClientName;
-        
+
         /// <summary>
         /// uxContactPerson control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxContactPerson;
-        
+
         /// <summary>
         /// uxPONumber control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxPONumber;
-        
+
         /// <summary>
         /// uxNumberOfProducts control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxNumberOfProducts;
-        
+
         /// <summary>
         /// uxPickupWhse control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton uxPickupWhse;
-        
+
         /// <summary>
         /// uxPickupDelivery control.
         /// </summary>
@@ -119,16 +121,16 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton uxPickupDelivery;
-        
+
         /// <summary>
-        /// uxPickupDeliveryMessage control.
+        /// uxPickupWhseMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl uxPickupDeliveryMessage;
-        
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl uxPickupWhseMessage;
+
         /// <summary>
         /// uxOrderStatus control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxOrderStatus;
-        
+
         /// <summary>
         /// uxComments control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox uxComments;
-        
+
         /// <summary>
         /// uxResultsGrid control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable uxResultsGrid;
-        
+
         /// <summary>
         /// uxGrid control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadGrid uxGrid;
-        
+
         /// <summary>
         /// uxSendOrder control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace MPClients.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button uxSendOrder;
-        
+
         /// <summary>
         /// uxPrint control.
         /// </summary>

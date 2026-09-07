@@ -168,6 +168,28 @@
 
                                     <tr>
                                         <td>
+                                            Allow Delivery:
+                                        </td>
+                                        <td>
+                                            <asp:CheckBox runat="server" ID="uxAllowDelivery" SkinID="CheckBoxSkin" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            Allow Pickup:
+                                        </td>
+                                        <td>
+                                            <asp:CheckBox runat="server" ID="uxAllowPickup" SkinID="CheckBoxSkin" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
                                             Search Only:
                                         </td>
                                         <td>

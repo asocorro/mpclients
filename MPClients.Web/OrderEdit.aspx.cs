@@ -46,7 +46,7 @@ namespace MPClients.Web
 
         void uxSendOrder_Click(object sender, EventArgs e)
         {
-            if (!uxPickupWhse.Checked && !uxPickupDelivery.Checked)
+            if (!(uxPickupWhse.Checked && uxPickupWhse.Enabled) && !(uxPickupDelivery.Checked && uxPickupDelivery.Enabled))
             {
                 base.MasterPage.DisplayMessage("Please enter the pickup method.");
             }
@@ -231,12 +231,19 @@ namespace MPClients.Web
             }
 
             uxPickupWhse.Visible = !boolRestrictOrderProductsForPickup || intNumberOfProducts <= intMaxOrderProductsForPickup;
-            uxPickupDeliveryMessage.Visible = !uxPickupWhse.Visible;
+            //uxPickupWhse.Visible = false;
+            uxPickupWhseMessage.Visible = !uxPickupWhse.Visible;
 
-            if (uxPickupDeliveryMessage.Visible) {
-                uxPickupDeliveryMessage.InnerHtml = "Por el momento no estamos aceptando órdenes de más de " + intMaxOrderProductsForPickup.ToString();
-                uxPickupDeliveryMessage.InnerHtml += " artículos para recoger en el almacén. <br/> Para activar la opción de recogido,";
-                uxPickupDeliveryMessage.InnerHtml += " por favor edite su carrito de compras y reduzca a " + intMaxOrderProductsForPickup.ToString() + " ó menos el número de artículos.";
+            if (uxPickupWhseMessage.Visible)
+            {
+                uxPickupWhseMessage.InnerHtml = "Por el momento no estamos aceptando órdenes de más de " + intMaxOrderProductsForPickup.ToString();
+                uxPickupWhseMessage.InnerHtml += " artículos para recoger en el almacén. <br/> Para activar la opción de recogido,";
+                uxPickupWhseMessage.InnerHtml += " por favor edite su carrito de compras y reduzca a " + intMaxOrderProductsForPickup.ToString() + " ó menos el número de artículos.";
+            }
+            else
+            {
+                //uxPickupWhse.Checked = false;
+                //uxPickupDelivery.Checked = uxPickupDelivery.Enabled;
             }
 
             uxGrid.DataSource = orderDetails;
@@ -269,6 +276,17 @@ namespace MPClients.Web
                     userClient = session.Get<MPClients.DataAccess.Domain.Client>(userProfile.ClientID);
                 }
 
+                MembershipUsers membershipUser;
+                membershipUser = UnitOfWork.GetIsolatedSession().Get<MembershipUsers>(new Guid(UserAccount.ProviderUserKey.ToString()));
+
+                bool AllowDelivery = false;
+                bool AllowPickup = false;
+                if (membershipUser != null)
+                {
+                    AllowDelivery = membershipUser.AllowDelivery.HasValue ? membershipUser.AllowDelivery.Value : false;
+                    AllowPickup = membershipUser.AllowPickup.HasValue ? membershipUser.AllowPickup.Value : false;
+                }
+
                 uxCurrentTime.Text = DateTime.UtcNow.AddHours(Convert.ToDouble(MPClients.Web.Properties.Settings.Default.TimeZoneOffset)).ToString();
                 uxRequestedBy.Text = UserAccount.UserName;
                 uxClientName.Text = userClient != null ? userClient.Fullname : "";
@@ -285,8 +303,18 @@ namespace MPClients.Web
                 uxSendOrder.Enabled = orders.Status == 2 && !System.Web.Security.Roles.IsUserInRole(Helper.ADMINISTRATOR_ROLE);
                 uxContactPerson.ReadOnly = orders.Status == 1;
                 uxPONumber.ReadOnly = orders.Status == 1;
-                uxPickupWhse.Enabled = orders.Status == 2;
-                uxPickupDelivery.Enabled = orders.Status == 2;
+
+                uxPickupWhse.Enabled = orders.Status == 2 && AllowPickup;
+                uxPickupDelivery.Enabled = orders.Status == 2 && AllowDelivery;
+
+                if (orders.Status == 2)
+                {
+                    if (AllowDelivery)
+                        uxPickupDelivery.Checked = true;
+                    else if (AllowPickup)
+                        uxPickupWhse.Checked = true;
+                }
+
                 uxComments.ReadOnly = orders.Status == 1;
                 // imprimir si el status es Placed o si el usuario es Admin
                 uxPrint.Enabled = orders.Status == 1 || System.Web.Security.Roles.IsUserInRole(Helper.ADMINISTRATOR_ROLE);

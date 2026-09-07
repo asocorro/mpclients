@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
+    <class name="OrderStatus" table="OrderStatus" >
+    <id name="ID" type="System.Int32" column="StatusID">
+        <generator class="assigned"/>
+    </id>
+    <property name="Description" column="Description" type="System.String" not-null="true" length="250"/>
+ </class>
+</hibernate-mapping>

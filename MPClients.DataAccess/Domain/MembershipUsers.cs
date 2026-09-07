@@ -20,6 +20,8 @@ namespace MPClients.DataAccess.Domain
         private System.Boolean _ChangePassword; 
         private System.Boolean? _IsActive;
         private System.Boolean? _IsLockedOut;
+        private System.Boolean? _AllowDelivery;
+        private System.Boolean? _AllowPickup;
 
         public MembershipUsers()
         {
@@ -55,7 +57,7 @@ namespace MPClients.DataAccess.Domain
         }
 
 
-        
+     
         public virtual System.Int32 PriceQuerys
         {
             get { return _PriceQuerys; }
@@ -140,6 +142,18 @@ namespace MPClients.DataAccess.Domain
         {
             get { return _IsLockedOut; }
             set { _IsLockedOut = value; }
+        }
+
+        public virtual System.Boolean? AllowDelivery
+        {
+            get { return _AllowDelivery; }
+            set { _AllowDelivery = value; }
+        }
+
+        public virtual System.Boolean? AllowPickup
+        {
+            get { return _AllowPickup; }
+            set { _AllowPickup = value; }
         }
 
         public override int GetHashCode()

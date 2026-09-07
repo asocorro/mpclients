@@ -1,0 +1,107 @@
+DiscountASP.net - Hosting Capabilities Questionnaire
+
+Instructions:
+- Fill your answers below each question. Keep screenshots or copied values in the repository (docs/screenshots) or paste links.
+- After you update the file, tell me and I will parse answers and produce next steps/patches.
+
+MUST-HAVE (confirm these first)
+1) .NET support
+   - Which .NET Framework versions are available? (Is 4.8 available?)
+	 Answer: 4.x -- need to find the x
+
+   - Do you support ASP.NET Core / .NET 6+ / .NET 7+ hosting? (Yes/No)
+	 Answer:
+
+2) Deployment methods
+   - Supported methods: FTP/FTPS, Web Deploy (MSDeploy), Git, Control-panel upload? Provide endpoints/notes.
+	 Answer: always used ftp/ftps
+
+3) IIS / app pool configuration
+   - Can you select CLR version and configure app pool settings (recycle, idle timeout)?
+	 Answer:
+
+   - What ASP.NET trust level is enforced (Full/Medium)?
+	 Answer:
+
+4) web.config & machineKey
+   - Can we edit web.config freely? (Yes/No)
+	 Answer: yes
+
+   - Can we add a fixed machineKey entry to web.config? (Yes/No)
+	 Answer: yes, we already have one
+
+   - Can you encrypt connectionStrings or run aspnet_regiis on our account? (Yes/No)
+	 Answer:
+
+5) Database
+   - SQL Server version available and how to obtain connection string (portal page)?
+	 Answer: sql server 2008r2
+
+   - Are outbound DB connections to external hosts allowed? (Yes/No)
+	 Answer: 
+
+   - DB size limits, max connections, backup policy (frequency/retention)?
+	 Answer:
+
+6) Networking & outbound
+   - Are outbound connections allowed to arbitrary hosts/ports (HTTPS 443, SMTP 25/587)? Any blocked ports?
+	 Answer:
+
+7) File system & permissions
+   - Is App_Data writable? Disk quota per account and current usage?
+	 Answer:
+
+IMPORTANT / USEFUL
+8) SMTP
+   - Is SMTP relay provided? Host/port/auth details or restrictions?
+	 Answer:
+
+9) Background tasks
+   - Can we run scheduled tasks or persistent background processes? If yes, how?
+	 Answer: no
+
+10) Session & scaling
+   - Single instance or farm? Is sticky session available?
+	 Answer:
+
+   - Can we use SQL Server or StateServer for session state? (Yes/No)
+	 Answer: i suppose so?
+
+11) Logs & debugging
+   - How to access IIS logs and application logs? Retention period?
+	 Answer: 
+
+   - Is remote debugging allowed? (Yes/No)
+	 Answer: no
+
+12) SSL / certificates
+   - Do you provide free SSL or allow custom certificate uploads? How to enable HTTPS?
+	 Answer: yes, can purchase
+
+13) Limits & quotas
+   - CPU, memory, process lifetime, idle shutdown, max request timeout, upload size limits?
+	 Answer:
+
+14) Environment variables / secrets
+   - Can we set environment variables or secure app settings in control panel? (Yes/No)
+	 Answer:
+
+15) Third-party / native components
+   - Any restrictions deploying third-party assemblies (Telerik) or native components?
+	 Answer:
+
+OPTIONAL (if known)
+16) Web Deploy / CI integration details
+	Answer:
+
+17) App warm-up hooks or recommended warm-up steps
+	Answer:
+
+18) Backup / staging options
+	Answer:
+
+Notes / attachments
+- Paste links to screenshots or control-panel pages here.
+
+Updated by: 
+Date:

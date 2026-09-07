@@ -27,6 +27,7 @@ namespace MPClients.DataAccess.Domain
         private System.String _Product_ID1;
         private System.String _AddToCart;
         private System.String _CategoryDescription;
+        private System.String _MoreInfoURL;
 
         private System.String _NameClean;
         private System.String _Description1Clean;
@@ -146,12 +147,17 @@ namespace MPClients.DataAccess.Domain
             set { _Product_ID1 = value; }
         }
 
+        public virtual System.String MoreInfoURL
+        {
+            get { return _MoreInfoURL; }
+            set { _MoreInfoURL = value; }
+        }
+
         public virtual System.String CategoryDescription
         {
             get { return _CategoryDescription; }
             set { _CategoryDescription = value; }
         }
-
         public virtual System.String AddToCart
         {
             get { return _AddToCart; }
