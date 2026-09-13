@@ -1,5 +1,6 @@
 using System;
 using System.Web;
+using System.Threading;
 using System.Configuration;
 using System.Web.Hosting;
 using System.Diagnostics;
@@ -79,7 +80,7 @@ namespace MPClients.DataAccess.NHibernate
             lock (factoryLock)
             {
                 if (initialized) return;
-                string nhConfig = ConfigurationManager.AppSettings["nhibernate.config"] ?? "~/nhibernate.config";
+                string nhConfig = GetAppSetting("nhibernate.config") ?? "~/nhibernate.config";
                 string configFile = HostingEnvironment.MapPath(nhConfig) ?? nhConfig;
                 Log("UnitOfWork.Initialize: nhibernate config file=" + configFile);
 
@@ -128,28 +129,60 @@ namespace MPClients.DataAccess.NHibernate
             {
                 Trace.WriteLine(message);
 
-                // If Trace listeners are not configured in host, fallback to writing a small log in App_Data
-                if (Trace.Listeners.Count == 0)
+                // Always attempt to write a small log in App_Data/Logs so we capture init events regardless of Trace listeners.
+                try
                 {
                     string basePath = HostingEnvironment.MapPath("~");
                     if (!string.IsNullOrEmpty(basePath))
                     {
                         string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
-                        try
+                        lock (logLock)
                         {
-                            lock (logLock)
+                            try
                             {
                                 System.IO.Directory.CreateDirectory(logDir);
                                 string path = System.IO.Path.Combine(logDir, "nhibernate_init.log");
-                                string line = DateTime.UtcNow.ToString("o") + " " + message + Environment.NewLine;
+                                string line = DateTime.UtcNow.ToString("o") + " " + message + System.Environment.NewLine;
                                 System.IO.File.AppendAllText(path, line);
                             }
+                            catch { /* swallow - best effort logging */ }
                         }
-                        catch { /* swallow - best effort logging */ }
+                    }
+                }
+                catch { /* swallow - best effort logging */ }
+            }
+            catch { /* swallow logging errors */ }
+        }
+
+        private static string GetAppSetting(string key)
+        {
+            try
+            {
+                // Try to use ConfigurationManager if available at runtime (avoid compile-time dependency)
+                var cfgType = Type.GetType("System.Configuration.ConfigurationManager, System.Configuration");
+                if (cfgType != null)
+                {
+                    var appSettingsProp = cfgType.GetProperty("AppSettings", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                    if (appSettingsProp != null)
+                    {
+                        var appSettings = appSettingsProp.GetValue(null) as System.Collections.Specialized.NameValueCollection;
+                        if (appSettings != null)
+                        {
+                            return appSettings[key];
+                        }
                     }
                 }
             }
-            catch { /* swallow logging errors */ }
+            catch { }
+
+            try
+            {
+                // Fallback to environment variable
+                return System.Environment.GetEnvironmentVariable(key.Replace('.', '_').ToUpper()) ?? System.Environment.GetEnvironmentVariable(key);
+            }
+            catch { }
+
+            return null;
         }
 
         /// <summary> 
@@ -237,7 +270,26 @@ namespace MPClients.DataAccess.NHibernate
         /// <param name="id">Id.</param> 
         public static void Load(System.Type type, object id)
         {
-            UnitOfWork.Session.Load(type, id);
+            try
+            {
+                UnitOfWork.Session.Load(type, id);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    string basePath = HostingEnvironment.MapPath("~") ?? AppDomain.CurrentDomain.BaseDirectory;
+                    string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
+                    System.IO.Directory.CreateDirectory(logDir);
+                    string path = System.IO.Path.Combine(logDir, "nhibernate_proxy_exceptions.log");
+                    string req = "";
+                    try { if (HttpContext.Current != null && HttpContext.Current.Request != null) req = " | URL=" + HttpContext.Current.Request.RawUrl; } catch { }
+                    string line = DateTime.UtcNow.ToString("o") + " | THREAD=" + Thread.CurrentThread.ManagedThreadId + req + " | ACTION=Load | TYPE=" + (type != null ? type.FullName : "<null>") + " | ID=" + (id != null ? id.ToString() : "<null>") + " | EX=" + ex.ToString() + System.Environment.NewLine;
+                    System.IO.File.AppendAllText(path, line);
+                }
+                catch { }
+                throw;
+            }
         }
 
         /// <summary> 
@@ -247,7 +299,26 @@ namespace MPClients.DataAccess.NHibernate
         /// <param name="id">Id.</param> 
         public static object Get(System.Type type, object id)
         {
-            return UnitOfWork.Session.Get(type, id);
+            try
+            {
+                return UnitOfWork.Session.Get(type, id);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    string basePath = HostingEnvironment.MapPath("~") ?? AppDomain.CurrentDomain.BaseDirectory;
+                    string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
+                    System.IO.Directory.CreateDirectory(logDir);
+                    string path = System.IO.Path.Combine(logDir, "nhibernate_proxy_exceptions.log");
+                    string req = "";
+                    try { if (HttpContext.Current != null && HttpContext.Current.Request != null) req = " | URL=" + HttpContext.Current.Request.RawUrl; } catch { }
+                    string line = DateTime.UtcNow.ToString("o") + " | THREAD=" + Thread.CurrentThread.ManagedThreadId + req + " | ACTION=Get | TYPE=" + (type != null ? type.FullName : "<null>") + " | ID=" + (id != null ? id.ToString() : "<null>") + " | EX=" + ex.ToString() + System.Environment.NewLine;
+                    System.IO.File.AppendAllText(path, line);
+                }
+                catch { }
+                throw;
+            }
         }
 
         /// <summary> 

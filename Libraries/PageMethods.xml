@@ -1,0 +1,518 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PageMethods</name>
+    </assembly>
+    <members>
+        <member name="T:MetaSapiens.PageMethods.PageMethodsException">
+            <summary>
+              <para>Class for the exceptions raised by PageMethods.</para>
+              <para>You should not create instances of this class by yourself.</para>
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.PageMethodsException"/> class with a specified error message.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.PageMethodsException"/> class with a specified error message
+            and a reference to the inner exception that is the cause of this exception.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.Constants">
+            <summary>
+            PageMethods constants.
+            </summary>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.Constants.CUSTOMTOOL_PageMethodsGenerator">
+            <summary>
+            The name of the custom tool that generates code from the PageList.xml files.
+            </summary>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.Constants.NAMESPACE_DefaultBase">
+            <summary>
+            Default base namespace for the generated code.
+            </summary>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.Constants.ProcessPostClientScript">
+            <summary>
+            Client script for HTTP POST management.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.ParamRequiredAttribute">
+            <summary>
+            Attribute used to mark a parameter as mandatory.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.Serialization.JsonSerializer">
+            <summary>
+            This type supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.Serialization.JsonSerializer.Serialize(System.Object)">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.PageMethodsBuildProvider">
+            <summary>
+            <see cref="T:System.Web.Compilation.BuildProvider"/> for PageMethods that uses the PageMethods.xml file to generate code.
+            </summary>
+            <remarks>
+              <para>
+              This build provider needs to be registered in the Web.config file with a block of XML like the following:
+              </para>
+              <code>
+              &lt;compilation debug="true"&gt;
+                &lt;buildProviders&gt;
+              	  &lt;add
+               		  extension=".xml"
+               		  type="MetaSapiens.PageMethods.PageMethodsBuildProvider, PageMethods"/&gt;
+                &lt;/buildProviders&gt;
+              &lt;/compilation&gt;
+              </code>
+            </remarks>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsBuildProvider.GenerateCode(System.Web.Compilation.AssemblyBuilder)">
+            <summary>
+            Generates source for the virtual path of the build provider, and adds the source to a specified assembly builder.
+            </summary>
+            <param name="assemblyBuilder">The assembly builder used to hold the generated code or source file.</param>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.CodeGenerator.GetSingleArgumentAttributeValue(System.Xml.XmlElement)">
+            <summary>
+            Returns the value for an attribute that has only one argument.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.BasePage">
+            <summary>
+              <para>Base class that includes the code for automatic invocation of methods
+            with the <see cref="T:MetaSapiens.PageMethods.PageMethodAttribute"/> attribute, based on the query string.</para>
+              <para>The default method is not handled by default for best performance.</para>
+            </summary>
+            <remarks>
+              <para>This class only overrides the <see cref="M:System.Web.UI.Control.OnLoad(System.EventArgs)"/> method
+            to include a call to <see cref="M:MetaSapiens.PageMethods.PageMethodsEngine.InvokeMethod(System.Type,System.Object,System.Boolean)"/>.</para>
+              <para></para> 
+              <para>If you want your pages to handle the default method, you can either
+            call the constructor like this:
+            <code>
+            public class MyBasePage : MetaSapiens.PageMethods.BasePage
+            {
+              public MyBasePage() : base(true)
+              {
+              }
+            }
+            </code>
+            or create your own base page like this:
+            <code>
+            public class BasePage : System.Web.UI.Page
+            {
+              protected override void OnLoad(EventArgs e)
+              {
+                base.OnLoad(e);
+                if (!IsPostBack)
+                  PageMethodsEngine.InvokeMethod(GetType(), this, true);
+              }
+            }
+            </code></para>
+            </remarks>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.BasePage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.BasePage"/> class.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.BasePage.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.BasePage"/> class.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.BasePage.OnLoad(System.EventArgs)">
+            <summary>
+            Overrides the <see cref="M:System.Web.UI.Control.OnLoad(System.EventArgs)"/> method
+            to include a call to <see cref="M:MetaSapiens.PageMethods.PageMethodsEngine.InvokeMethod(System.Type,System.Object,System.Boolean)"/>.
+            </summary>
+            <param name="e">A <see cref="T:System.EventArgs"/> that contains the data for the event.</param>
+            <remarks>The InvokeMethod method is invoked only if
+            <see cref="P:System.Web.UI.Page.IsPostBack"/> is <see langword="false"/>.</remarks>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.AnchorAttribute">
+            <summary>
+            Marks a parameter as being an anchor in a URL.
+            In a URL, the anchor is any text following a #.
+            Given the URL http://myserver/index.htm#main, main is the anchor.
+            </summary>
+            <example>
+            If the following code is used:
+            <code>
+            [PageMethod(true)]
+            void Test(int i, [Anchor] string a)
+            {
+            }
+            </code>
+            the corresponding URL for the following sample call:
+            <c>QueryMethods.Test(12, "myanchor")</c>
+            will be something like http://myserver/mypage.aspx?i=12#myanchor
+            </example>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.Serialization.JsonDeserializer">
+            <summary>
+            This type supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.Serialization.JsonDeserializer.Deserialize(System.String,System.Type)">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.ParamFormatAttribute">
+            <summary>
+            Attribute used to specify the format that is to be applied to a parameter when including it in a URL.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.ParamFormatAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.ParamFormatAttribute"/> class.
+            </summary>
+            <param name="format">The format string</param>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.ParamFormatAttribute.Format">
+            <summary>
+            The format string.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.UrlFormatAttribute">
+            <summary>
+              <para>This attribute allows to specify the format of a URL for a query method.</para>
+              <para>This is especially useful if you use URL rewriting (also called URL aliasing).</para>
+            </summary>
+            <remarks>
+              <para>You refer to a parameter using the {parameter name} syntax.</para>
+              <para>You can refer to the method name using {{METHOD}}.</para>
+            </remarks>
+            <example>
+            If the following code is used:
+            <code>
+            [PageMethod(true), UrlFormat("~/{{METHOD}}{custID}.aspx")]
+            void EditCustomer(int custID)
+            {
+            }
+            </code>
+            The result URL would look like: http://myserver/myapp/EditCustomer12.aspx
+            </example>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.UrlFormatAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.UrlFormatAttribute"/> class.
+            </summary>
+            <param name="format">The format string</param>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.UrlFormatAttribute.Format">
+            <summary>
+            The format string.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.PageMethodAttribute">
+            <summary>
+            	<para>Attribute used to mark a method as a "Page Method".</para>
+            	<para>A page method is managed by PageMethods:
+            	<list type="bullet">
+            		<item>a matching method that builds a URL will be generated;</item>
+            		<item>this method will be invoked by PageMethods when a matching URL is used</item>
+            	</list></para>
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.PageMethodAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodAttribute.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.PageMethodAttribute"/> class.
+            </summary>
+            <param name="isDefault">Specifies whether this method is the default method. See <see cref="P:MetaSapiens.PageMethods.PageMethodAttribute.IsDefault"/>.</param>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.PageMethodAttribute.IsDefault">
+            <summary>
+            	<para>Specifies whether this method is the default method.</para>
+            	<para>The default method will not add a method name to its URL.</para>
+            </summary>
+            <remarks>There should be only one default method.</remarks>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.PageMethodsModule">
+            <summary>
+            HTTP module that enables PageMethods' support for HTTP POST.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsModule.IsSupportedHandler(System.Web.IHttpHandler)">
+            <summary>
+            Add POST data only for <see cref="T:System.Web.IHttpHandler">handlers</see> supported by PageMethods.
+            </summary>
+            <param name="handler"><see cref="T:System.Web.IHttpHandler"/></param>
+            <returns><see langword="true"/> if the current handler is supported by PageMethods, <see langword="false"/> otherwise.</returns>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.ParamNameAttribute">
+            <summary>
+            This attribute allows to specify the name that is to be used for a parameter when including it in a URL.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.ParamNameAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.ParamNameAttribute"/> class.
+            </summary>
+            <param name="name">The name to use</param>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.ParamNameAttribute.Name">
+            <summary>
+            The name to use.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.PageMethodsEngine">
+            <summary>
+            	<para>Class that contains static (shared) methods to activate PageMethods.</para>
+            	<para>The main methods can be used to build URLs from a set of parameters,
+            	or to invoke a query method based on a <see cref="T:System.Web.HttpRequest"/>.</para>
+            </summary>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.PageMethodsEngine.PARAM_Method">
+            <summary>
+            The name used for the parameter identifying the method in a URL.
+            </summary>
+            <value>The default value is <c>"PageMethod"</c></value>
+            <remarks>You can change this name if you wish.</remarks>
+            <example>
+            If the following code is used:
+            <code>
+            [PageMethod]
+            void Test(int i)
+            {
+            }
+            </code>
+            the corresponding URL for the following sample call: <c>QueryMethods.Test(12)</c>
+            will be something like http://myserver/mypage.aspx?PageMethod=Test&amp;i=12
+            </example>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.PageMethodsEngine.SUFFIX_Post">
+            <summary>
+            Suffix added to method names for HTTP POST.
+            </summary>
+            <value>Default value: "_Post"</value>
+            <example>if the method Method1 is called using POST, its name becomes Method1_Post.</example>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.PageMethodsEngine.SUFFIX_GetPostData">
+            <summary>
+            Suffix added to method names that returns data for HTTP POST.
+            </summary>
+            <value>Default value: "_GetPostData"</value>
+            <example>For the method Method1, a name becomes Method1_GetPostData.</example>
+        </member>
+        <member name="F:MetaSapiens.PageMethods.PageMethodsEngine.SUFFIX_Raw">
+            <summary>
+            Suffix added to method names that returns raw URLs.
+            </summary>
+            <value>Default value: "_Raw"</value>
+            <example>For the method Method1, a name becomes Method1_GetPostData.</example>
+            <remarks>Raw URLs are the URLs without formatting, which includes the query string.</remarks>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.BuildQueryString(MetaSapiens.PageMethods.UrlParam[])">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.BuildQueryString(System.String,MetaSapiens.PageMethods.UrlParam[])">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.BuildQueryStringAndFormattedUrl(System.String,System.String,System.String@,MetaSapiens.PageMethods.UrlParam[])">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.InvokeMethod(System.Object)">
+            <summary>
+            Invokes a query method on a specified object, based on the current <see cref="T:System.Web.HttpRequest"/>.
+            </summary>
+            <param name="target">The target object of the invocation.</param>
+            <remarks>
+            	<para>The type on which the method will be searched is the class of the target object.</para>
+            	<para>The default method will be ignored, which means that a method name is required
+            	in the URL of the request in order to have a method invoked.</para>
+            </remarks>
+            <returns>Indicates whether a method to invoke has been found and called.</returns>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.InvokeMethod(System.Object,System.Boolean)">
+            <summary>
+            Invokes a query method on a specified object, based on the current <see cref="T:System.Web.HttpRequest"/>.
+            </summary>
+            <param name="target">The target object of the invocation.</param>
+            <param name="handleDefaultMethod">
+            	<para>Whether to handle the default method.</para>
+            	<para>The default method is identified by a <see cref="T:MetaSapiens.PageMethods.PageMethodAttribute"/> with the
+            	<see cref="P:MetaSapiens.PageMethods.PageMethodAttribute.IsDefault"/> property set to true.</para>
+            	<para>If this parameter is not true, the default method is ignored, which means that
+            	a method name is required in the URL of the request in order to have a method invoked.</para>
+            </param>
+            <remarks>
+            	<para>The type on which the method will be searched is the class of the target object.</para>
+            </remarks>
+            <returns>Indicates whether a method to invoke has been found and called.</returns>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.InvokeMethod(System.Type,System.Object)">
+            <summary>
+            Invokes a query method on a specified object, based on the current <see cref="T:System.Web.HttpRequest"/>.
+            </summary>
+            <param name="type">
+            	<para>The type on which the method will be searched.</para>
+            	<para>This parameter is useful for example to work with interfaces,
+            	and not only the class of the target object.</para>
+            </param>
+            <param name="target">The target object of the invocation.</param>
+            <returns>Indicates whether a method to invoke has been found and called.</returns>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.InvokeMethod(System.Type,System.Object,System.Boolean)">
+            <summary>
+            Invokes a query method on a specified object, based on the current <see cref="T:System.Web.HttpRequest"/>.
+            </summary>
+            <param name="type">
+            	<para>The type on which the method will be searched.</para>
+            	<para>This parameter is useful for example to work with interfaces,
+            	and not only the class of the target object.</para>
+            </param>
+            <param name="target">The target object of the invocation.</param>
+            <param name="handleDefaultMethod">
+            	<para>Whether to handle the default method.</para>
+            	<para>The default method is identified by a <see cref="T:MetaSapiens.PageMethods.PageMethodAttribute"/> with the
+            	<see cref="P:MetaSapiens.PageMethods.PageMethodAttribute.IsDefault"/> property set to true.</para>
+            	<para>If this parameter is not true, the default method is ignored, which means that
+            	a method name is required in the URL of the request in order to have a method invoked.</para>
+            </param>
+            <returns>Indicates whether a method to invoke has been found and called.</returns>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.AddPostData(System.String,System.Web.HttpRequest)">
+            <summary>
+            Adds data passed with HTTP POST to a URL.
+            </summary>
+            <param name="url">The original URL.</param>
+            <param name="request">The request that contains the data.</param>
+            <returns>Returns the URL augmented with data passed with HTTP POST.</returns>
+            <remarks>
+            This method needs to be called in the Application_BeginRequest
+            method of Global.asax to make HTTP POST working correctly.
+            <see cref="M:System.Web.HttpContext.RewritePath(System.String)"/> needs to be invoked
+            with the resulting URL.
+            </remarks>
+            <example>
+            <para>Here is a sample Application_BeginRequest method for HTTP POST:</para>
+            <code>
+            void Application_BeginRequest(Object sender, EventArgs e)
+            {
+              String url;
+            
+              url = Request.RawUrl;
+              url = MetaSapiens.PageMethods.PageMethodsEngine.AddPostData(url, Request);
+              Context.RewritePath(url);
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.CombineUri(System.String,System.String)">
+            <summary>
+            Returns a URI string built by combining a base URI with a relative URI.
+            </summary>
+            <param name="basePart">The base part of the URI.</param>
+            <param name="relativePart">The relative part of the URI to add to the base part.</param>
+            <example>CombineUri(http://metasapiens.com", "pagemethods/faq") returns http://metasapiens.com/pagemethods/faq</example>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.ResolveUrl(System.String)">
+            <summary>
+            Resolves URLs starting with ~/ to absolute ones.
+            </summary>
+            <param name="url">The URL to resolve.</param>
+            <returns>An absolute URL.</returns>
+            <remarks>The resolved URL contains the application path.</remarks>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.PageMethodsEngine.ResolveUrl(System.String,System.Boolean)">
+            <summary>
+            Resolves URLs starting with ~/ to absolute ones.
+            </summary>
+            <param name="url">The URL to resolve.</param>
+            <param name="includeApplicationPath">Whether to include the application path in the result.</param>
+            <returns>An absolute URL.</returns>
+            <example>
+              Given the URL "~/Customers/Default.aspx" and the application path "MyApp",
+              <para>if <paramref name="includeApplicationPath"/> is <see langword="true" />, the result will be "/MyApp/Customers/Default.aspx"</para>
+              <para>If <paramref name="includeApplicationPath"/> is <see langword="false" />, the result will be "/Customers/Default.aspx"</para>
+            </example>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.ManagedUrlAttribute">
+            <summary>
+              <para>This type supports the PageMethods infrastructure and is not intended to be used directly from your code.</para>
+              <para>This attribute is used to identify the URL managed by PageMethods.</para>
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.ManagedUrlAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MetaSapiens.PageMethods.ManagedUrlAttribute"/> class.
+            </summary>
+            <param name="url">The managed URL</param>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.ManagedUrlAttribute.Url">
+            <summary>
+            The managed URL.
+            </summary>
+        </member>
+        <member name="T:MetaSapiens.PageMethods.UrlParam">
+            <summary>
+            This type supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.UrlParam.#ctor(System.String,System.Object,System.String,System.Boolean)">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.UrlParam.#ctor(System.String,System.Object,System.String,System.Boolean,System.String)">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="M:MetaSapiens.PageMethods.UrlParam.GetFormattedValue">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.UrlParam.Format">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.UrlParam.IsAnchor">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.UrlParam.Name">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.UrlParam.TypeConverter">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+        <member name="P:MetaSapiens.PageMethods.UrlParam.Value">
+            <summary>
+            This member supports the PageMethods infrastructure and is not intended to be used directly from your code.
+            </summary>
+        </member>
+    </members>
+</doc>

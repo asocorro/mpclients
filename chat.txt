@@ -1,0 +1,51 @@
+GitHub Copilot
+
+Good — you’ve cleaned temp files multiple times. Let’s regroup and narrow the remaining cause with a short checklist + next diagnostics. I’ll be direct.
+
+Quick diagnosis summary
+- We fixed the NHibernate startup race and the ViewState NREs.
+- DiagAssemblies shows your app loads from Temporary ASP.NET Files (normal under VS), and MPClients.Web/MPClients.DataAccess are present and look OK.
+- The lingering symptoms (AppDomain unloads, “ambiguous match”, proxy creation failures) point to runtime reloads or duplicate/partial assemblies at load time — common causes: file sync (OneDrive), multiple running IIS/IIS Express instances, precompiled artifacts left in temp, or build/publish race.
+
+Priority actions (do in order)
+
+1) Move project out of OneDrive (highly likely cause)
+- Your solution path contains OneDrive. OneDrive file sync can create partial writes and trigger app domain restarts.
+- Move the entire solution to a plain local folder (e.g., C:\src\MPClients), reopen solution, rebuild, and run tests.
+
+2) Ensure a single site process and no VS extras
+- Close Visual Studio and stop IIS Express. Re-open VS, open only this solution, disable Browser Link and Page Inspector (they add assemblies).
+- In Project > Properties > Web, disable “Enable Edit and Continue” / Browser Link if present.
+
+3) Clean and rebuild (one more time) — exact commands
+- Stop site / VS, then run elevated PowerShell from repo root:
+  Remove-Item -Recurse -Force .\MPClients.Web\bin\*
+  Remove-Item -Recurse -Force .\MPClients.Web\obj\*
+  if (Test-Path "$env:windir\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files\") {
+    Remove-Item -Recurse -Force "$env:windir\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files\*"
+  }
+  if (Test-Path "$env:windir\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files\") {
+    Remove-Item -Recurse -Force "$env:windir\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files\*"
+  }
+- Reopen VS → Clean Solution → Rebuild Solution → F5.
+
+4) Reproduce minimally
+- In browser (local) open DebugInit.aspx?token=... (expect OK).
+- Run the concurrent tool with concurrency 10. If OK, try 50.
+
+If failures still occur, collect these artifacts and paste them:
+- DiagAssemblies.aspx output (full) AFTER moving out of OneDrive and fresh rebuild.
+- Last 200 lines of App_Data/Logs/first_chance_exceptions.log and unhandled_exceptions.log.
+- The exact exception text/stack for the most recent failure (copy from first-chance log or unhandled_exceptions).
+- List of files in bin and the temp folder (PowerShell):
+  Get-ChildItem .\MPClients.Web\bin | Select Name, LastWriteTime, Length
+  Get-ChildItem "$env:TEMP\Temporary ASP.NET Files" -Recurse -Depth 2 | Select FullName,LastWriteTime
+
+If you want deeper tracing (only if above doesn’t reveal cause)
+- Enable Fusion assembly binding logs (Fuslogvw) to see if multiple assemblies are being probed/loaded.
+- Check Windows Application event log for ASP.NET warnings about app domain restarts and the reason.
+
+Which action will you do now?
+- A: Move solution out of OneDrive and rerun the clean/rebuild test
+- B: Keep location but I’ll run the cleanup + diagnostics you asked for and paste outputs
+Tell me which and paste the requested logs/outputs if you choose B.

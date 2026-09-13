@@ -71,9 +71,14 @@ namespace MPClients.PageControllers
         {
             get
             {
-                return Convert.ToString(
-                    System.Web.Security.Membership.GetUser(
-                        HttpContext.Current.User.Identity.Name).ProviderUserKey);
+                try
+                {
+                    var user = System.Web.Security.Membership.GetUser(HttpContext.Current?.User?.Identity?.Name);
+                    if (user?.ProviderUserKey != null)
+                        return Convert.ToString(user.ProviderUserKey);
+                }
+                catch { }
+                return string.Empty;
             }
         }
 
@@ -83,15 +88,9 @@ namespace MPClients.PageControllers
         {
             get
             {
-                try
-                {
-
-                    return ViewState["Territory"].ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                // Avoid throwing NullReferenceException when key is missing
+                var v = ViewState["Territory"] as string;
+                return v ?? string.Empty;
             }
             set
             {
@@ -105,15 +104,8 @@ namespace MPClients.PageControllers
         {
             get
             {
-                try
-                {
-
-                    return ViewState["DefaultClientID"].ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                var v = ViewState["DefaultClientID"] as string;
+                return v ?? string.Empty;
             }
             set
             {
@@ -127,15 +119,8 @@ namespace MPClients.PageControllers
         {
             get
             {
-                try
-                {
-
-                    return ViewState["CurrentClientName"].ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                var v = ViewState["CurrentClientName"] as string;
+                return v ?? string.Empty;
             }
             set
             {
@@ -149,15 +134,8 @@ namespace MPClients.PageControllers
         {
             get
             {
-                try
-                {
-
-                    return ViewState["DefaultClientName"].ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                var v = ViewState["DefaultClientName"] as string;
+                return v ?? string.Empty;
             }
             set
             {
@@ -170,15 +148,8 @@ namespace MPClients.PageControllers
         {
             get
             {
-                try
-                {
-
-                    return ViewState["UserClientID"].ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                var v = ViewState["UserClientID"] as string;
+                return v ?? string.Empty;
             }
             set
             {
@@ -201,31 +172,31 @@ namespace MPClients.PageControllers
             {
                 try
                 {
-                    Guid sh = new Guid(ViewState["ShoppingCartId"].ToString());
-
-                    if (sh == Guid.Empty)
+                    var obj = ViewState["ShoppingCartId"];
+                    if (obj != null)
                     {
-                        MembershipUser currentUser = Membership.GetUser();
-
-                        Guid val = Guid.NewGuid();
-                        UpdateCurrentShopping(val, currentUser.ProviderUserKey.ToString());
-
-                        ViewState["ShoppingCartId"] = val;
-                        return val;
+                        if (Guid.TryParse(obj.ToString(), out Guid sh) && sh != Guid.Empty)
+                            return sh;
                     }
-                    else
+
+                    // not present or empty => create new
+                    MembershipUser currentUser = null;
+                    try { currentUser = Membership.GetUser(); } catch { }
+
+                    Guid val = Guid.NewGuid();
+                    if (currentUser != null && currentUser.ProviderUserKey != null)
                     {
-                        return sh;
+                        try { UpdateCurrentShopping(val, currentUser.ProviderUserKey.ToString()); } catch { }
                     }
+
+                    ViewState["ShoppingCartId"] = val;
+                    return val;
                 }
                 catch
                 {
-                    MembershipUser currentUser = Membership.GetUser();
-
+                    // As a last resort, return a new Guid
                     Guid val = Guid.NewGuid();
-                    UpdateCurrentShopping(val, currentUser.ProviderUserKey.ToString());
-
-                    ViewState["ShoppingCartId"] = val;
+                    try { ViewState["ShoppingCartId"] = val; } catch { }
                     return val;
                 }
             }

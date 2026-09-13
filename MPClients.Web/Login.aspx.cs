@@ -74,10 +74,47 @@ namespace MPClients
 
                 if (users.Count > 0)
                 {
+                    // Use an isolated session and wrap Load in try/catch so proxy creation failures are logged with context.
+                    ISession isolated = null;
+                    Client client = null;
+                    try
+                    {
+                        isolated = UnitOfWork.GetIsolatedSession();
+                        client = isolated.Load<Client>(users[0].ClientID);
+                        bool isInHold = !client.Active.Value;
+                        if (isInHold)
+                        {
+                            // fallthrough to existing logic
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+                            string basePath = System.Web.Hosting.HostingEnvironment.MapPath("~") ?? AppDomain.CurrentDomain.BaseDirectory;
+                            string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
+                            System.IO.Directory.CreateDirectory(logDir);
+                            string path = System.IO.Path.Combine(logDir, "nhibernate_proxy_exceptions.log");
+                            string req = "";
+                            try { if (HttpContext.Current != null && HttpContext.Current.Request != null) req = " | URL=" + HttpContext.Current.Request.RawUrl; } catch { }
+                            string line = DateTime.UtcNow.ToString("o") + " | THREAD=" + System.Threading.Thread.CurrentThread.ManagedThreadId + req + " | ACTION=GetIsolatedSession.Load | TYPE=Client | ID=" + users[0].ClientID + " | EX=" + ex.ToString() + System.Environment.NewLine;
+                            System.IO.File.AppendAllText(path, line);
+                        }
+                        catch { }
+                        finally
+                        {
+                            try { if (isolated != null) isolated.Close(); } catch { }
+                        }
+                        // rethrow so existing error handling remains
+                        throw;
+                    }
+                    finally
+                    {
+                        try { if (isolated != null) isolated.Close(); } catch { }
+                    }
 
-                    Client client = UnitOfWork.GetIsolatedSession().Load<Client>(users[0].ClientID);
-
-                    bool isInHold = !client.Active.Value;
+                    // if we got here, client was loaded and isInHold handled above
+                    bool isInHold = (client != null && client.Active.HasValue) ? !client.Active.Value : false;
 
                     if (isInHold)
                     {

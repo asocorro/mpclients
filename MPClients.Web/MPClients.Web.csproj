@@ -59,31 +59,31 @@
   <ItemGroup>
     <Reference Include="anrControls.SyntaxColoring, Version=1.3.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\anrControls.SyntaxColoring.dll</HintPath>
+      <HintPath>..\Libraries\anrControls.SyntaxColoring.dll</HintPath>
     </Reference>
     <Reference Include="AnthemExtensions, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\AnthemExtensions.dll</HintPath>
+      <HintPath>..\Libraries\AnthemExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Castle.DynamicProxy, Version=1.1.5.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\NHibernate\Castle.DynamicProxy.dll</HintPath>
+      <HintPath>..\Libraries\NHibernate\Castle.DynamicProxy.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\NHibernate\Iesi.Collections.dll</HintPath>
+      <HintPath>..\Libraries\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\NHibernate\log4net.dll</HintPath>
+      <HintPath>..\Libraries\NHibernate\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\Libraries\NHibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="PageMethods, Version=1.7.2.0, Culture=neutral, PublicKeyToken=85ba0449db1fcd18, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\PageMethods.dll</HintPath>
+      <HintPath>..\Libraries\PageMethods.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>True</Private>
@@ -125,10 +125,10 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Telerik.Web.UI">
-      <HintPath>..\..\Libraries\Telerik\Telerik.Web.UI.dll</HintPath>
+      <HintPath>..\Libraries\Telerik\Telerik.Web.UI.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Web.UI.Skins">
-      <HintPath>..\..\Libraries\Telerik\Telerik.Web.UI.Skins.dll</HintPath>
+      <HintPath>..\Libraries\Telerik\Telerik.Web.UI.Skins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +153,9 @@
     <Content Include="Configuration.aspx" />
     <Content Include="DebugInit.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="DiagAssemblies.aspx" />
     <Content Include="EditClientOrderingForResults.aspx" />
+    <Content Include="Error.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Images\AvailableCategories.png" />
     <Content Include="Images\PlusMinus.png" />
@@ -168,6 +170,7 @@
     </Content>
     <Content Include="SearchConfiguration.aspx" />
     <Content Include="SQL\Script.sql" />
+    <Content Include="tool.txt" />
     <Content Include="updatecfg.xml" />
     <Content Include="updatedbcfg.xml" />
     <Content Include="Web.config">
@@ -263,12 +266,23 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DiagAssemblies.aspx.cs">
+      <DependentUpon>DiagAssemblies.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="EditClientOrderingForResults.aspx.cs">
       <DependentUpon>EditClientOrderingForResults.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditClientOrderingForResults.aspx.designer.cs">
       <DependentUpon>EditClientOrderingForResults.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Error.aspx.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error.aspx.designer.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

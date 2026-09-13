@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12120.281
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPClients.DataAccess", "MPClients.DataAccess\MPClients.DataAccess.csproj", "{2709B10F-1506-4DA3-9B91-CC747C3AF47F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPClients.Web", "MPClients.Web\MPClients.Web.csproj", "{39750F1C-60AA-4AD4-88F9-898BAF30A9A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentInitTest", "Tools\ConcurrentInitTest\ConcurrentInitTest.csproj", "{608E0767-1C79-2601-4F6F-5EFC86F0270E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89F50628-94BD-4B61-98F8-86A87BB93E7B}"
+	ProjectSection(SolutionItems) = preProject
+		chat.txt = chat.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +28,15 @@ Global
 		{39750F1C-60AA-4AD4-88F9-898BAF30A9A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39750F1C-60AA-4AD4-88F9-898BAF30A9A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39750F1C-60AA-4AD4-88F9-898BAF30A9A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{608E0767-1C79-2601-4F6F-5EFC86F0270E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{608E0767-1C79-2601-4F6F-5EFC86F0270E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{608E0767-1C79-2601-4F6F-5EFC86F0270E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{608E0767-1C79-2601-4F6F-5EFC86F0270E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E78C3A6-7A2C-402F-B04A-9BFEF48CA8B0}
 	EndGlobalSection
 EndGlobal
