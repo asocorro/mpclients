@@ -11,38 +11,156 @@ namespace MPClients
     {
         [ThreadStatic]
         private static bool _firstChanceLoggingInProgress;
+
         protected void Application_Start(object sender, EventArgs e)
         {
             // Pre-warm NHibernate mappings and build SessionFactory once to avoid concurrent build issues
             try
             {
                 UnitOfWork.Initialize();
-                // Register a safer FirstChanceException logger to capture thrown exceptions for diagnosis.
-                // Use a reentrancy guard and minimal operations to avoid recursion or StackOverflow.
-                AppDomain.CurrentDomain.FirstChanceException += (s, ev) =>
+
+                // Register FirstChance exception logger
+                AppDomain.CurrentDomain.FirstChanceException += FirstChanceHandler;
+
+                // Probe assemblies and log diagnostics
+                try { DiagnosticProbeAssemblies(); } catch { }
+                try { DiagnosticLogOverloadedMethods(); } catch { }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine("Global.Application_Start: UnitOfWork.Initialize failed: " + ex);
+                throw;
+            }
+        }
+
+        private void FirstChanceHandler(object s, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs ev)
+        {
+            if (_firstChanceLoggingInProgress) return;
+            _firstChanceLoggingInProgress = true;
+            try
+            {
+                var ex = ev.Exception;
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string logDir = Path.Combine(basePath, "App_Data", "Logs");
+                try { Directory.CreateDirectory(logDir); } catch { }
+
+                try
                 {
-                    // prevent re-entrancy which can lead to StackOverflow
-                    if (_firstChanceLoggingInProgress) return;
-                    _firstChanceLoggingInProgress = true;
+                    string path = Path.Combine(logDir, "first_chance_exceptions.log");
+                    string requestInfo = "";
                     try
                     {
-                        var ex = ev.Exception;
-                        string basePath = AppDomain.CurrentDomain.BaseDirectory;
-                        string logDir = Path.Combine(basePath, "App_Data", "Logs");
-                        try { Directory.CreateDirectory(logDir); } catch { }
-                        try
+                        var ctx = HttpContext.Current;
+                        if (ctx != null && ctx.Request != null) requestInfo = " | URL=" + ctx.Request.RawUrl;
+                    }
+                    catch { }
+
+                    string msg = DateTime.UtcNow.ToString("o") + " | THREAD=" + Thread.CurrentThread.ManagedThreadId + requestInfo + " | EX=" + (ex != null ? ex.ToString() : "<null>") + System.Environment.NewLine;
+                    File.AppendAllText(path, msg);
+
+                    // If we see an ArgumentNullException related to enum parsing, capture request details for diagnostics
+                    try
+                    {
+                        if (ex is ArgumentNullException || (ex != null && ex.ToString().IndexOf("Enum", StringComparison.OrdinalIgnoreCase) >= 0))
                         {
-                            string path = Path.Combine(logDir, "first_chance_exceptions.log");
-                            // Log full exception.ToString() to capture inner exceptions and loader details
-                            string requestInfo = "";
                             try
                             {
                                 var ctx = HttpContext.Current;
                                 if (ctx != null && ctx.Request != null)
                                 {
-                                    requestInfo = " | URL=" + ctx.Request.RawUrl;
+                                    var sb = new System.Text.StringBuilder();
+                                    sb.AppendLine("--- Request parameters ---");
+                                    try
+                                    {
+                                        foreach (string k in ctx.Request.QueryString)
+                                        {
+                                            sb.AppendLine("QS: " + k + "=" + ctx.Request.QueryString[k]);
+                                        }
+                                    }
+                                    catch { }
+                                    try
+                                    {
+                                        foreach (string k in ctx.Request.Form)
+                                        {
+                                            sb.AppendLine("FORM: " + k + "=" + ctx.Request.Form[k]);
+                                        }
+                                    }
+                                    catch { }
+                                    try { File.AppendAllText(path, sb.ToString()); } catch { }
                                 }
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
 
+                    // If AmbiguousMatch observed, log duplicate type owners
+                    try
+                    {
+                        Exception probeEx = ex;
+                        while (probeEx != null)
+                        {
+                            if (probeEx.GetType().Name == "AmbiguousMatchException")
+                            {
+                                try { DiagnosticLogDuplicateTypeOwners(logDir); } catch { }
+                                break;
+                            }
+                            probeEx = probeEx.InnerException;
+                        }
+                    }
+                    catch { }
+
+                    var rtlex = ex as ReflectionTypeLoadException;
+                    if (rtlex != null && rtlex.LoaderExceptions != null)
+                    {
+                        foreach (var le in rtlex.LoaderExceptions)
+                        {
+                            try { File.AppendAllText(path, "LOADER: " + (le != null ? le.ToString() : "<null>") + System.Environment.NewLine); } catch { }
+                        }
+                    }
+                }
+                catch { }
+            }
+            finally
+            {
+                _firstChanceLoggingInProgress = false;
+            }
+        }
+
+        private void DiagnosticProbeAssemblies()
+        {
+            try
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string binPath = Path.Combine(basePath, "bin");
+                string logDir = Path.Combine(basePath, "App_Data", "Logs");
+                Directory.CreateDirectory(logDir);
+                string path = Path.Combine(logDir, "loader_exceptions.log");
+
+                foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    try { var types = asm.GetTypes(); }
+                    catch (ReflectionTypeLoadException rtlex)
+                    {
+                        File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | LoadedAssembly=" + (asm.FullName ?? "<null>") + "\n");
+                        foreach (var le in rtlex.LoaderExceptions) { File.AppendAllText(path, "LoaderException: " + (le?.Message ?? "<null>") + "\n" + (le?.StackTrace ?? "") + "\n"); }
+                    }
+                    catch (Exception ex) { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | AssemblyGetTypesFailed=" + (asm.FullName ?? "<null>") + " | " + ex.Message + "\n"); }
+                }
+
+                if (Directory.Exists(binPath))
+                {
+                    foreach (var file in Directory.GetFiles(binPath, "*.dll"))
+                    {
+                        try { Assembly.ReflectionOnlyLoadFrom(file); }
+                        catch (FileLoadException flex) { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | ReflectionOnlyLoadFromFailed=" + file + " | " + flex.Message + "\n"); }
+                        catch (BadImageFormatException bife) { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | BadImageFormat=" + file + " | " + bife.Message + "\n"); }
+                        catch (Exception ex) { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | LoadFromFailed=" + file + " | " + ex.Message + "\n"); }
+                    }
+                }
+            }
+            catch { }
+        }
         private void DiagnosticLogDuplicateTypeOwners(string logDir)
         {
             try
@@ -63,137 +181,36 @@ namespace MPClients
                     }
                     catch { }
                 }
-                foreach (var kv in map)
+                foreach (var kv in map) { if (kv.Value.Count > 1) { try { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | TYPE=" + kv.Key + " | ASMS=" + string.Join(";", kv.Value) + System.Environment.NewLine); } catch { } } }
+            }
+            catch { }
+        }
+        private void DiagnosticLogOverloadedMethods()
+        {
+            try
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string logDir = Path.Combine(basePath, "App_Data", "Logs");
+                Directory.CreateDirectory(logDir);
+                string path = Path.Combine(logDir, "overloaded_methods.log");
+                var typesToCheck = new[] { typeof(MPClients.DataAccess.Domain.Client), typeof(MPClients.DataAccess.Domain.MembershipUsers) };
+                foreach (var t in typesToCheck)
                 {
-                    if (kv.Value.Count > 1)
+                    try
                     {
-                        try { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | TYPE=" + kv.Key + " | ASMS=" + string.Join(";", kv.Value) + System.Environment.NewLine); } catch { }
+                        var methods = t.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                        var groups = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>();
+                        foreach (var m in methods) { string name = m.Name; if (!groups.TryGetValue(name, out var list)) { list = new System.Collections.Generic.List<string>(); groups[name] = list; } list.Add(m.ToString()); }
+                        foreach (var kv in groups) { if (kv.Value.Count > 1) { try { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | TYPE=" + t.FullName + " | METHOD=" + kv.Key + " | COUNT=" + kv.Value.Count + " | SIGS=" + string.Join("; ", kv.Value) + System.Environment.NewLine); } catch { } } }
+                    }
+                    catch (Exception ex)
+                    {
+                        try { File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | ERROR inspecting " + t.FullName + " | " + ex + System.Environment.NewLine); } catch { }
                     }
                 }
             }
             catch { }
         }
-                            }
-                            catch { }
-
-                            string msg = DateTime.UtcNow.ToString("o") + " | THREAD=" + Thread.CurrentThread.ManagedThreadId
-                                + requestInfo
-                                + " | EX=" + (ex != null ? ex.ToString() : "<null>")
-                                + Environment.NewLine;
-                            File.AppendAllText(path, msg);
-                            // If we observed an AmbiguousMatchException, dump a summary of types that appear in multiple loaded assemblies.
-                            try
-                            {
-                                Exception probeEx = ex;
-                                while (probeEx != null)
-                                {
-                                    if (probeEx.GetType().Name == "AmbiguousMatchException")
-                                    {
-                                        try { DiagnosticLogDuplicateTypeOwners(logDir); } catch { }
-                                        break;
-                                    }
-                                    probeEx = probeEx.InnerException;
-                                }
-                            }
-                            catch { }
-
-
-                            // If this is a ReflectionTypeLoadException, log each LoaderException explicitly
-                            var rtlex = ex as ReflectionTypeLoadException;
-                            if (rtlex != null && rtlex.LoaderExceptions != null)
-                            {
-                                foreach (var le in rtlex.LoaderExceptions)
-                                {
-                                    try
-                                    {
-                                        File.AppendAllText(path, "LOADER: " + (le != null ? le.ToString() : "<null>") + Environment.NewLine);
-                                    }
-                                    catch { }
-                                }
-                            }
-                        }
-                        catch { /* swallow to avoid cascading failures */ }
-                    }
-                    finally
-                    {
-                        _firstChanceLoggingInProgress = false;
-                    }
-                };
-                // Probe assemblies in the bin folder and loaded assemblies for ReflectionTypeLoadException
-                try
-                {
-                    DiagnosticProbeAssemblies();
-                }
-                catch { }
-            }
-            catch (Exception ex)
-            {
-                // Let startup fail loudly in staging; in production ensure monitoring/alerts are in place
-                System.Diagnostics.Trace.WriteLine("Global.Application_Start: UnitOfWork.Initialize failed: " + ex);
-                throw;
-            }
-        }
-
-        private void DiagnosticProbeAssemblies()
-        {
-            try
-            {
-                string basePath = AppDomain.CurrentDomain.BaseDirectory;
-                string binPath = Path.Combine(basePath, "bin");
-                string logDir = Path.Combine(basePath, "App_Data", "Logs");
-                Directory.CreateDirectory(logDir);
-                string path = Path.Combine(logDir, "loader_exceptions.log");
-
-                // Check already loaded assemblies
-                foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    try
-                    {
-                        // Force type load check
-                        var types = asm.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException rtlex)
-                    {
-                        File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | LoadedAssembly=" + (asm.FullName ?? "<null>") + "\n");
-                        foreach (var le in rtlex.LoaderExceptions)
-                        {
-                            File.AppendAllText(path, "LoaderException: " + (le?.Message ?? "<null>") + "\n" + (le?.StackTrace ?? "") + "\n");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | AssemblyGetTypesFailed=" + (asm.FullName ?? "<null>") + " | " + ex.Message + "\n");
-                    }
-                }
-
-                // Also attempt to load assemblies from bin (discover problems with assemblies not yet loaded)
-                if (Directory.Exists(binPath))
-                {
-                    foreach (var file in Directory.GetFiles(binPath, "*.dll"))
-                    {
-                        try
-                        {
-                            // Load into reflection-only context to avoid executing code
-                            Assembly.ReflectionOnlyLoadFrom(file);
-                        }
-                        catch (FileLoadException flex)
-                        {
-                            File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | ReflectionOnlyLoadFromFailed=" + file + " | " + flex.Message + "\n");
-                        }
-                        catch (BadImageFormatException bife)
-                        {
-                            File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | BadImageFormat=" + file + " | " + bife.Message + "\n");
-                        }
-                        catch (Exception ex)
-                        {
-                            File.AppendAllText(path, DateTime.UtcNow.ToString("o") + " | LoadFromFailed=" + file + " | " + ex.Message + "\n");
-                        }
-                    }
-                }
-            }
-            catch { /* best effort */ }
-        }
-
         protected void Application_Error(object sender, EventArgs e)
         {
             try
@@ -209,7 +226,7 @@ namespace MPClients
                     System.IO.File.AppendAllText(path, text);
                 }
             }
-            catch { /* best-effort logging */ }
+            catch { }
         }
     }
 }

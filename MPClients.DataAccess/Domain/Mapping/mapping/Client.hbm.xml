@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
-  <class name="Client" table="Client" >
+  <class name="Client" table="Client" lazy="false">
     <id name="ID" type="System.String" column="Client_ID">
       <generator class="assigned"/>
     </id>
