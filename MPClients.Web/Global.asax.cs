@@ -58,6 +58,57 @@ namespace MPClients
                     string msg = DateTime.UtcNow.ToString("o") + " | THREAD=" + Thread.CurrentThread.ManagedThreadId + requestInfo + " | EX=" + (ex != null ? ex.ToString() : "<null>") + System.Environment.NewLine;
                     File.AppendAllText(path, msg);
 
+                    // Append full stack traces and inner exception chain for better diagnostics
+                    try
+                    {
+                        try { File.AppendAllText(path, "STACK: " + (ex?.StackTrace ?? "<null>") + System.Environment.NewLine); } catch { }
+                        try { File.AppendAllText(path, "ENVSTACK: " + Environment.StackTrace + System.Environment.NewLine); } catch { }
+                        try
+                        {
+                            Exception ie = ex?.InnerException;
+                            while (ie != null)
+                            {
+                                try { File.AppendAllText(path, "INNER: " + ie.GetType().FullName + " - " + (ie.Message ?? "<null>") + System.Environment.NewLine + (ie.StackTrace ?? "") + System.Environment.NewLine); } catch { }
+                                ie = ie.InnerException;
+                            }
+                        }
+                        catch { }
+                    }
+                    catch { }
+
+                    // If this looks like the ReturnUrl/login enum failure, collect request/session/items for deeper context
+                    try
+                    {
+                        bool isEnumArgNull = ex is ArgumentNullException || (ex != null && ex.ToString().IndexOf("Enum", StringComparison.OrdinalIgnoreCase) >= 0);
+                        var ctx = HttpContext.Current;
+                        bool urlHasReturn = false;
+                        try { if (ctx != null && ctx.Request != null && ctx.Request.RawUrl != null && ctx.Request.RawUrl.IndexOf("ReturnUrl", StringComparison.OrdinalIgnoreCase) >= 0) urlHasReturn = true; } catch { }
+
+                        if (isEnumArgNull || urlHasReturn)
+                        {
+                            try
+                            {
+                                string diagPath = Path.Combine(logDir, "login_failure_diagnostics.log");
+                                var sb2 = new System.Text.StringBuilder();
+                                sb2.AppendLine("---- LOGIN FAILURE DIAGNOSTICS " + DateTime.UtcNow.ToString("o") + " ----");
+                                try { sb2.AppendLine("EXTYPE=" + (ex != null ? ex.GetType().FullName : "<null>")); } catch { }
+                                try { sb2.AppendLine("EX=" + (ex != null ? ex.ToString() : "<null>")); } catch { }
+                                try { sb2.AppendLine("RawUrl=" + (ctx?.Request?.RawUrl ?? "<null>")); } catch { }
+                                try { sb2.AppendLine("QueryString:"); if (ctx != null) { foreach (string k in ctx.Request.QueryString) sb2.AppendLine("  " + k + "=" + ctx.Request.QueryString[k]); } } catch { }
+                                try { sb2.AppendLine("Form:"); if (ctx != null) { foreach (string k in ctx.Request.Form) sb2.AppendLine("  " + k + "=" + ctx.Request.Form[k]); } } catch { }
+                                try { sb2.AppendLine("Headers:"); if (ctx != null) { foreach (string k in ctx.Request.Headers) sb2.AppendLine("  " + k + "=" + ctx.Request.Headers[k]); } } catch { }
+                                try { sb2.AppendLine("Cookies:"); if (ctx != null) { foreach (string k in ctx.Request.Cookies) sb2.AppendLine("  " + k + "=" + ctx.Request.Cookies[k]?.Value); } } catch { }
+                                try { sb2.AppendLine("--- HttpContext.Items ---"); if (ctx != null) { foreach (object k in ctx.Items.Keys) { try { sb2.AppendLine("  " + k + "=" + (ctx.Items[k] ?? "<null>")); } catch { sb2.AppendLine("  " + k + "=<unreadable>"); } } } } catch { }
+                                try { sb2.AppendLine("--- Session keys ---"); if (ctx != null && ctx.Session != null) { foreach (string k in ctx.Session.Keys) { try { sb2.AppendLine("  " + k + "=" + (ctx.Session[k] ?? "<null>")); } catch { sb2.AppendLine("  " + k + "=<unreadable>"); } } } } catch { }
+                                try { sb2.AppendLine("STACK: " + (ex?.StackTrace ?? "<null>")); } catch { }
+                                try { sb2.AppendLine("ENVSTACK: " + Environment.StackTrace); } catch { }
+                                try { File.AppendAllText(diagPath, sb2.ToString() + System.Environment.NewLine); } catch { }
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
+
                     // If we see an ArgumentNullException related to enum parsing, capture request details for diagnostics
                     try
                     {
