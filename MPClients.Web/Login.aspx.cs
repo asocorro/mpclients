@@ -93,7 +93,6 @@ namespace MPClients
 
                 if (users.Count > 0)
                 {
-                    // Use an isolated session and wrap Load in try/catch so proxy creation failures are logged with context.
                     ISession isolated = null;
                     Client client = null;
                     bool isInHold = false;
@@ -102,10 +101,6 @@ namespace MPClients
                         isolated = UnitOfWork.GetIsolatedSession();
                         client = isolated.Load<Client>(users[0].ClientID);
                         isInHold = client != null && client.Active.HasValue ? !client.Active.Value : false;
-                        if (isInHold)
-                        {
-                            // fallthrough to existing logic
-                        }
                     }
                     catch (Exception ex)
                     {
@@ -125,7 +120,6 @@ namespace MPClients
                         {
                             try { if (isolated != null) isolated.Close(); } catch { }
                         }
-                        // rethrow so existing error handling remains
                         throw;
                     }
                     finally
@@ -133,11 +127,8 @@ namespace MPClients
                         try { if (isolated != null) isolated.Close(); } catch { }
                     }
 
-                    // if we got here, client was loaded and isInHold handled above
-
                     if (isInHold)
                     {
-
                         using (SqlConnection sqlConn = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalSqlServer"].ToString()))
                         {
                             sqlConn.Open();
@@ -148,7 +139,6 @@ namespace MPClients
                                 {
                                     uxAlert.InnerHtml = "<p><strong>Su cuenta ha sido suspendida, contacte al Administrador del sistema al 787-782-4121.</strong> </p>";
                                     uxAlert.Visible = true;
-
                                     e.Cancel = isInHold;
                                 }
                                 else
@@ -160,7 +150,6 @@ namespace MPClients
                                         {
                                             uxAlert.InnerHtml = "<p><strong>Su cuenta ha sido suspendida, contacte al Administrador del sistema al 787-782-4121.</strong> </p>";
                                             uxAlert.Visible = true;
-
                                             e.Cancel = isInHold;
                                         }
                                     }
@@ -168,15 +157,13 @@ namespace MPClients
                                     {
                                         uxAlert.InnerHtml = "<p><strong>Su cuenta ha sido suspendida, contacte al Administrador del sistema al 787-782-4121.</strong> </p>";
                                         uxAlert.Visible = true;
-
                                         e.Cancel = isInHold;
                                     }
-                                    
                                 }
                             }
-
                         }
                     }
+                }
             }
             catch (Exception ex)
             {
@@ -217,12 +204,6 @@ namespace MPClients
                 }
                 catch { }
                 throw;
-            }
-                }
-            }
-            catch
-            {
-
             }
         }
 
