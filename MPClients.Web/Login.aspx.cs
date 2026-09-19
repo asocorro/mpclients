@@ -177,6 +177,47 @@ namespace MPClients
 
                         }
                     }
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    string basePath = System.Web.Hosting.HostingEnvironment.MapPath("~") ?? AppDomain.CurrentDomain.BaseDirectory;
+                    string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
+                    System.IO.Directory.CreateDirectory(logDir);
+                    string path = System.IO.Path.Combine(logDir, "login_error_context.log");
+                    var sb = new System.Text.StringBuilder();
+                    sb.AppendLine(DateTime.UtcNow.ToString("o") + " | THREAD=" + System.Threading.Thread.CurrentThread.ManagedThreadId + " | ACTION=Login.LoggingIn.Exception");
+                    try { sb.AppendLine("EX=" + ex.ToString()); } catch { }
+                    try { sb.AppendLine("UserName=" + (uiLogin.UserName ?? "<null>")); } catch { }
+                    try { sb.AppendLine("RawUrl=" + (HttpContext.Current?.Request?.RawUrl ?? "<null>")); } catch { }
+                    try
+                    {
+                        sb.AppendLine("--- Session keys ---");
+                        var sess = HttpContext.Current?.Session;
+                        if (sess != null)
+                        {
+                            foreach (string k in sess.Keys)
+                            {
+                                try { sb.AppendLine(k + "=" + (sess[k] != null ? sess[k].ToString() : "<null>")); } catch { sb.AppendLine(k + "=<unreadable>"); }
+                            }
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        sb.AppendLine("--- ViewState keys ---");
+                        foreach (string k in ViewState.Keys)
+                        {
+                            try { sb.AppendLine(k + "=" + (ViewState[k] != null ? ViewState[k].ToString() : "<null>")); } catch { sb.AppendLine(k + "=<unreadable>"); }
+                        }
+                    }
+                    catch { }
+                    try { System.IO.File.AppendAllText(path, sb.ToString() + System.Environment.NewLine); } catch { }
+                }
+                catch { }
+                throw;
+            }
                 }
             }
             catch
