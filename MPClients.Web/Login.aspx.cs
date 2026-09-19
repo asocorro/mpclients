@@ -66,6 +66,25 @@ namespace MPClients
 
         void uiLogin_LoggingIn(object sender, LoginCancelEventArgs e)
         {
+            // Diagnostic: capture request context and username to help trace ArgumentNullException from enum parsing
+            try
+            {
+                string basePath = System.Web.Hosting.HostingEnvironment.MapPath("~") ?? AppDomain.CurrentDomain.BaseDirectory;
+                string logDir = System.IO.Path.Combine(basePath, "App_Data", "Logs");
+                System.IO.Directory.CreateDirectory(logDir);
+                string path = System.IO.Path.Combine(logDir, "login_request_context.log");
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine(DateTime.UtcNow.ToString("o") + " | THREAD=" + System.Threading.Thread.CurrentThread.ManagedThreadId + " | ACTION=Login.LoggingIn");
+                try { sb.AppendLine("UserName=" + (uiLogin.UserName ?? "<null>")); } catch { }
+                try { sb.AppendLine("RawUrl=" + (HttpContext.Current?.Request?.RawUrl ?? "<null>")); } catch { }
+                try { sb.AppendLine("QueryString:"); foreach (string k in HttpContext.Current.Request.QueryString) sb.AppendLine("  " + k + "=" + HttpContext.Current.Request.QueryString[k]); } catch { }
+                try { sb.AppendLine("Form:"); foreach (string k in HttpContext.Current.Request.Form) sb.AppendLine("  " + k + "=" + HttpContext.Current.Request.Form[k]); } catch { }
+                try { sb.AppendLine("Headers:"); foreach (string k in HttpContext.Current.Request.Headers) sb.AppendLine("  " + k + "=" + HttpContext.Current.Request.Headers[k]); } catch { }
+                try { sb.AppendLine("Cookies:"); foreach (string k in HttpContext.Current.Request.Cookies) sb.AppendLine("  " + k + "=" + HttpContext.Current.Request.Cookies[k]?.Value); } catch { }
+                try { System.IO.File.AppendAllText(path, sb.ToString() + System.Environment.NewLine); } catch { }
+            }
+            catch { }
+
             try
             {
                 ICriterion expression = Expression.Eq("UserName", uiLogin.UserName);
@@ -77,11 +96,12 @@ namespace MPClients
                     // Use an isolated session and wrap Load in try/catch so proxy creation failures are logged with context.
                     ISession isolated = null;
                     Client client = null;
+                    bool isInHold = false;
                     try
                     {
                         isolated = UnitOfWork.GetIsolatedSession();
                         client = isolated.Load<Client>(users[0].ClientID);
-                        bool isInHold = !client.Active.Value;
+                        isInHold = client != null && client.Active.HasValue ? !client.Active.Value : false;
                         if (isInHold)
                         {
                             // fallthrough to existing logic
@@ -114,7 +134,6 @@ namespace MPClients
                     }
 
                     // if we got here, client was loaded and isInHold handled above
-                    bool isInHold = (client != null && client.Active.HasValue) ? !client.Active.Value : false;
 
                     if (isInHold)
                     {
