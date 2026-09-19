@@ -25,6 +25,14 @@ namespace MPClients
                 // Probe assemblies and log diagnostics
                 try { DiagnosticProbeAssemblies(); } catch { }
                 try { DiagnosticLogOverloadedMethods(); } catch { }
+
+                // Explicitly set unobtrusive validation mode to None at runtime for older ASP.NET versions
+                try
+                {
+                    System.Web.Configuration.SettingsPropertyValueCollection svc = null;
+                    try { System.Web.UI.ValidationSettings.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None; } catch { }
+                }
+                catch { }
             }
             catch (Exception ex)
             {
