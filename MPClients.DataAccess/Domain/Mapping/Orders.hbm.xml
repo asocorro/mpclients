@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="MPClients.DataAccess" namespace="MPClients.DataAccess.Domain">
-	<class name="Orders" table="Orders" >
+	<class name="Orders" table="Orders" lazy="false" >
 		<id name="ID" type="System.Guid" column="OrderId">
 			<generator class="assigned"/>
 		</id>
@@ -17,9 +17,9 @@
 		<property name="AutoNum" column="AutoNum" type="System.Int32" update="false" insert="false"/>
 
     <property name="OnBehalfOf" column="OnBehalfOf" type="System.String"/>
-		<many-to-one name="StatusOfOrder" column="Status" class="OrderStatus"  update="0"  insert="0" />
-    <many-to-one name="UserIdLookup" column="UserId" class="MembershipUsers"  update="0"  insert="0" />
-		<bag name="OrderDetails" table="OrderDetails" inverse="true" lazy="true" cascade="delete">
+		<many-to-one name="StatusOfOrder" column="Status" class="OrderStatus"  update="0"  insert="0" lazy="false" />
+	<many-to-one name="UserIdLookup" column="UserId" class="MembershipUsers"  update="0"  insert="0" lazy="false" />
+		<bag name="OrderDetails" table="OrderDetails" inverse="true" lazy="false" cascade="delete">
 			<key column="OrderID" />
 			<one-to-many class="OrderDetail"/>
 		</bag>

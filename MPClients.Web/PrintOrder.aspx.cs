@@ -44,7 +44,8 @@ namespace MPClients.Web
 
         private void LoadData()
         {
-            ISession session = UnitOfWork.GetIsolatedSession();
+            using (ISession session = UnitOfWork.GetIsolatedSession())
+            {
             Orders orders;
             orders = session.Get<Orders>(new Guid(uxID.Value ));
 
@@ -75,18 +76,31 @@ namespace MPClients.Web
                     uiPickupMethod.Text = orders.Delivery.Value ? "Delivery" : "Pickup at warehouse";
                 }
             }
+            }
         }
         private void BindGrid()
         {
-            ISession session = UnitOfWork.GetIsolatedSession();
-            ICriterion expression = Expression.Eq("OrderID", new Guid(uxID.Value));
-            ICriteria criteria =
-                session.CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression);
-            criteria.AddOrder(new Order("ProductID", true));
-            IList<MPClients.DataAccess.Domain.OrderDetail> orderDetails
-                = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
+            IList<object[]> rows;
+            using (ISession session = UnitOfWork.GetIsolatedSession())
+            {
+                ICriterion expression = Expression.Eq("OrderID", new Guid(uxID.Value));
+                // Fetch only the fields we need to render the grid to avoid creating NHibernate proxies
+                IQuery q = session.CreateQuery("select od.ProductID, od.Quantity, od.NetPrice from OrderDetail od where od.OrderID = :orderId order by od.ProductID");
+                q.SetParameter("orderId", new Guid(uxID.Value));
+                rows = q.List<object[]>();
+            }
+            // Materialize lightweight DTOs for the grid
+            var list = new List<MPClients.DataAccess.Domain.OrderDetail>();
+            foreach (var r in rows)
+            {
+                var od = new MPClients.DataAccess.Domain.OrderDetail();
+                od.ProductID = (string)r[0];
+                od.Quantity = Convert.ToInt32(r[1]);
+                od.NetPrice = r[2] == null ? (decimal?)null : Convert.ToDecimal(r[2]);
+                list.Add(od);
+            }
 
-            uxGrid.DataSource = orderDetails;
+            uxGrid.DataSource = list;
         }
 
         double sum = 0;

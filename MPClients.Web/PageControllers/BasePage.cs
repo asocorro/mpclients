@@ -34,7 +34,10 @@ namespace MPClients.PageControllers
                 //IList<MPClients.DataAccess.Domain.MembershipUsers> users = criteria.List<MembershipUsers>();
 
                 MembershipUsers membershipUser;
-                membershipUser = UnitOfWork.GetIsolatedSession().Get<MembershipUsers>(new Guid(currentUser.ProviderUserKey.ToString()));
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    membershipUser = isolatedSession.Get<MembershipUsers>(new Guid(currentUser.ProviderUserKey.ToString()));
+                }
 
                 if (membershipUser != null)
                 {

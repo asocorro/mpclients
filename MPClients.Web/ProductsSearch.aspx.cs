@@ -161,27 +161,44 @@ namespace MPClients
             ITransaction transaction = session.BeginTransaction();
             List<string> productIds = new List<string>();
             Orders orders;
-            orders = session.Get<Orders>(ShoppingCartId);
+            try
+            {
+                orders = session.Get<Orders>(ShoppingCartId);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    string logPath = Server.MapPath("~/App_Data/Logs/first_chance_exceptions.log");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath));
+                    System.IO.File.AppendAllText(logPath, DateTime.UtcNow.ToString("o") + " | PRODUCTS GET Orders Exception: " + ex.ToString() + System.Environment.NewLine + System.Environment.NewLine);
+                }
+                catch { }
+                throw;
+            }
 
             if (orders == null)
             {
                 MembershipUser SecurityMembershipUser = Membership.GetUser();
                 string userID = SecurityMembershipUser.ProviderUserKey.ToString();
 
-                string query = @"select orders.*
+                string query = @"select count(*) as cnt
                         from Orders orders, MembershipUsers up
                         where orders.UserId = up.UserID and up.ClientID='" + UserClientID + "' ";
 
                 if (!string.IsNullOrEmpty(Territory))
                 {
-                    query = @"select orders.*
+                    query = @"select count(*) as cnt
                         from Orders orders, MembershipUsers up
                         where orders.UserId = up.UserID and orders.OnBehalfOf='" + UserClientID + "' and up.UserID='" + userID + "' ";
                 }
-                IQuery sqlQuery = UnitOfWork.GetIsolatedSession().
-                    CreateSQLQuery( query, "Orders", typeof(MPClients.DataAccess.Domain.Orders));
-                IList ordenes = sqlQuery.List();
-                long countRows = ordenes.Count;
+                long countRows;
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ISQLQuery sqlQuery = isolatedSession.CreateSQLQuery(query);
+                    sqlQuery.AddScalar("cnt", NHibernateUtil.Int32);
+                    countRows = Convert.ToInt64(sqlQuery.UniqueResult());
+                }
 
                 orders = new Orders(ShoppingCartId);
 
@@ -225,9 +242,17 @@ namespace MPClients
                 ICriterion expression = Expression.And(
                     Expression.Eq("OrderID", ShoppingCartId)
                     , Expression.Eq("ProductID", control.Value));
-                ICriteria criteria = session.CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression);
-                IList<MPClients.DataAccess.Domain.OrderDetail> carts
-                    = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
+                // Query scalars to avoid creating NHibernate proxies for OrderDetail
+                ISession _session = session;
+                IQuery q = _session.CreateQuery("select od.ID from OrderDetail od where od.OrderID = :orderId and od.ProductID = :productId");
+                q.SetParameter("orderId", ShoppingCartId);
+                q.SetParameter("productId", control.Value);
+                IList<Guid> existingIds = q.List<Guid>();
+                IList<MPClients.DataAccess.Domain.OrderDetail> carts = new List<MPClients.DataAccess.Domain.OrderDetail>();
+                foreach (var id in existingIds)
+                {
+                    carts.Add(new MPClients.DataAccess.Domain.OrderDetail(id));
+                }
 
                 if (carts.Count > 0)
                 {
@@ -255,7 +280,21 @@ namespace MPClients
                   
 
                     //Obtenemos un listado de los productos friends que estan en la orden
-                    session.Save(shoppingcart);
+                    try
+                    {
+                        session.Save(shoppingcart);
+                    }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+                            string logPath = Server.MapPath("~/App_Data/Logs/first_chance_exceptions.log");
+                            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath));
+                            System.IO.File.AppendAllText(logPath, DateTime.UtcNow.ToString("o") + " | PRODUCTS ADDTOCART Exception saving OrderDetail: " + ex.ToString() + System.Environment.NewLine + System.Environment.NewLine);
+                        }
+                        catch { }
+                        throw;
+                    }
                 }
             }
 
@@ -318,11 +357,15 @@ namespace MPClients
                     txtIncludedCategories.Value += "'" + var.Category + "'";
                 }
 
-                ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(Category));
-                criteria.Add(Expression.In("ID", (ICollection)userCategories));
-                criteria.AddOrder(new Order("ID", true));
+                IList<Category> categories;
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ICriteria criteria = isolatedSession.CreateCriteria(typeof(Category));
+                    criteria.Add(Expression.In("ID", (ICollection)userCategories));
+                    criteria.AddOrder(new Order("ID", true));
 
-                IList<Category> categories = criteria.List<Category>();
+                    categories = criteria.List<Category>();
+                }
 
                 foreach (Category category in categories)
                 {
@@ -338,9 +381,13 @@ namespace MPClients
         {
 
             ICriterion expression = Expression.Eq("CategoryID", e.Node.Value);
-            ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(SubCategory)).Add(expression);
-            criteria.AddOrder(new Order("SubCategoryName", true));
-            IList<SubCategory> categories = criteria.List<SubCategory>();
+            IList<SubCategory> categories;
+            using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+            {
+                ICriteria criteria = isolatedSession.CreateCriteria(typeof(SubCategory)).Add(expression);
+                criteria.AddOrder(new Order("SubCategoryName", true));
+                categories = criteria.List<SubCategory>();
+            }
 
             if (e.Node.Nodes.Count == 0)
             {
@@ -365,37 +412,40 @@ namespace MPClients
                 // TODO: poner esto en el web.config
                 searchCriteria += " AND NOT Product_ID1 LIKE '999%'";
 
-                ISession session = UnitOfWork.GetIsolatedSession();
-                IQuery query = session.CreateQuery("SELECT COUNT(*) FROM Product WHERE " + searchCriteria);
-
-                IList resuls = query.List();
-                int countRows = Convert.ToInt32(resuls[0]);
-
-                // save the query
-                //ISession SearchQuerySession = UnitOfWork.GetIsolatedSession();
-                //ITransaction tx = SearchQuerySession.BeginTransaction();
-
-                //SearchQuery sq = new SearchQuery();
-                //sq.QueryText = "SELECT * FROM Product WHERE " + searchCriteria;
-                //sq.UserId = new Guid(base.UserID);
-                //sq.QueryDateTime = DateTime.Now;
-                //sq.ResultsCount = countRows;
-                //SearchQuerySession.Save(sq);
-                //tx.Commit();
-
-                MembershipUsers membershipUser = session.Get<MembershipUsers>(new Guid(base.UserID));
-                if (membershipUser != null)
+                int countRows;
+                using (ISession session = UnitOfWork.GetIsolatedSession())
                 {
-                    ITransaction transaction = session.BeginTransaction();
-                    // TODO: guardar el query y la fecha
-                    membershipUser.PriceQuerys += 1;
-                    // TODO: poner esto en el web.config
-                    membershipUser.LastPriceQueryDate = DateTime.UtcNow.AddHours(Convert.ToDouble(MPClients.Web.Properties.Settings.Default.TimeZoneOffset));
+                    IQuery query = session.CreateQuery("SELECT COUNT(*) FROM Product WHERE " + searchCriteria);
 
-                    session.Save(membershipUser);
+                    IList resuls = query.List();
+                    countRows = Convert.ToInt32(resuls[0]);
 
-                    transaction.Commit();
+                    // save the query
+                    //ISession SearchQuerySession = UnitOfWork.GetIsolatedSession();
+                    //ITransaction tx = SearchQuerySession.BeginTransaction();
 
+                    //SearchQuery sq = new SearchQuery();
+                    //sq.QueryText = "SELECT * FROM Product WHERE " + searchCriteria;
+                    //sq.UserId = new Guid(base.UserID);
+                    //sq.QueryDateTime = DateTime.Now;
+                    //sq.ResultsCount = countRows;
+                    //SearchQuerySession.Save(sq);
+                    //tx.Commit();
+
+                    MembershipUsers membershipUser = session.Get<MembershipUsers>(new Guid(base.UserID));
+                    if (membershipUser != null)
+                    {
+                        ITransaction transaction = session.BeginTransaction();
+                        // TODO: guardar el query y la fecha
+                        membershipUser.PriceQuerys += 1;
+                        // TODO: poner esto en el web.config
+                        membershipUser.LastPriceQueryDate = DateTime.UtcNow.AddHours(Convert.ToDouble(MPClients.Web.Properties.Settings.Default.TimeZoneOffset));
+
+                        session.Save(membershipUser);
+
+                        transaction.Commit();
+
+                    }
                 }
                 if (countRows == 0)
                 {
@@ -826,10 +876,14 @@ namespace MPClients
                     expression = Expression.And(expression, Expression.Eq("ProductCategory", "00000"));
                 }
                 
-                ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(VWProducts)).Add(expression);
-                criteria.AddOrder(new Order("Description1", true));
-                criteria.AddOrder(new Order("ID", true));
-                IList<VWProducts> results = criteria.List<VWProducts>();
+                IList<VWProducts> results;
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ICriteria criteria = isolatedSession.CreateCriteria(typeof(VWProducts)).Add(expression);
+                    criteria.AddOrder(new Order("Description1", true));
+                    criteria.AddOrder(new Order("ID", true));
+                    results = criteria.List<VWProducts>();
+                }
 
                 foreach (VWProducts product in results)
                 {
@@ -901,14 +955,17 @@ namespace MPClients
                 {
                     currentDetailsId = new List<String>();
 
-                    ICriterion expression1 = Expression.Eq("OrderID", ShoppingCartId);
-                    ICriteria criteria1 = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression1);
-                    IList<MPClients.DataAccess.Domain.OrderDetail> currentDetails
-                        = criteria1.List<MPClients.DataAccess.Domain.OrderDetail>();
-
-                    foreach (MPClients.DataAccess.Domain.OrderDetail var in currentDetails)
+                    // Avoid loading domain proxies for OrderDetail (Castle.DynamicProxy AmbiguousMatch)
+                    // Query only the ProductID values we need instead of loading full entities
+                    using (ISession _session = UnitOfWork.GetIsolatedSession())
                     {
-                        currentDetailsId.Add(var.ProductID);
+                        IQuery pidQuery = _session.CreateQuery("select od.ProductID from OrderDetail od where od.OrderID = :orderId");
+                        pidQuery.SetParameter("orderId", ShoppingCartId);
+                        IList<string> pidList = pidQuery.List<string>();
+                        foreach (string pid in pidList)
+                        {
+                            currentDetailsId.Add(pid);
+                        }
                     }
                 }
 
@@ -1008,6 +1065,7 @@ namespace MPClients
                 conn.Open();
                 SqlCommand command = new SqlCommand("spGetTireSizes", conn);
                 command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 60;
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {

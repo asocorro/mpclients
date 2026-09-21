@@ -88,8 +88,12 @@ namespace MPClients
             try
             {
                 ICriterion expression = Expression.Eq("UserName", uiLogin.UserName);
-                ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MembershipUsers)).Add(expression);
-                IList<MPClients.DataAccess.Domain.MembershipUsers> users = criteria.List<MembershipUsers>();
+                IList<MPClients.DataAccess.Domain.MembershipUsers> users;
+                using (ISession criteriaSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ICriteria criteria = criteriaSession.CreateCriteria(typeof(MembershipUsers)).Add(expression);
+                    users = criteria.List<MembershipUsers>();
+                }
 
                 if (users.Count > 0)
                 {
@@ -213,8 +217,12 @@ namespace MPClients
 
             MPClients.DataAccess.Domain.MembershipUsers membershipUser = null;
             ICriterion expression = Expression.Eq("UserName", uiLogin.UserName);
-            ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MembershipUsers)).Add(expression);
-            IList<MPClients.DataAccess.Domain.MembershipUsers> users = criteria.List<MembershipUsers>();
+            IList<MPClients.DataAccess.Domain.MembershipUsers> users;
+            using (ISession criteriaSession = UnitOfWork.GetIsolatedSession())
+            {
+                ICriteria criteria = criteriaSession.CreateCriteria(typeof(MembershipUsers)).Add(expression);
+                users = criteria.List<MembershipUsers>();
+            }
 
             HttpCookie cookie = new HttpCookie("Preferences");
             cookie["Id"] = CurrentUser.ProviderUserKey.ToString();

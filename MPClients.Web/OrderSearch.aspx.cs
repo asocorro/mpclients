@@ -43,15 +43,15 @@ namespace MPClients.Web
 
         void uxGrid_NeedDataSource(object source, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
-            BindDataGrid();
+            BindDataGrid(false);
         }
 
         void uxSearch_Click(object sender, EventArgs e)
         {
-            BindDataGrid();
+            BindDataGrid(true);
         }
 
-        private void BindDataGrid()
+        private void BindDataGrid(bool rebind)
         {
             try
             {
@@ -102,12 +102,19 @@ namespace MPClients.Web
                          expression,
                          Expression.Eq("Status", 1)
                          );
-                ICriteria criteria = UnitOfWork.GetIsolatedSession().
-                    CreateCriteria(typeof(MPClients.DataAccess.Domain.Orders)).Add(expression);
-                criteria.AddOrder(new Order("OrderDate", false));
-                IList<MPClients.DataAccess.Domain.Orders> orders = criteria.List<MPClients.DataAccess.Domain.Orders>();
+                IList<MPClients.DataAccess.Domain.Orders> orders;
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ICriteria criteria = isolatedSession.
+                        CreateCriteria(typeof(MPClients.DataAccess.Domain.Orders)).Add(expression);
+                    criteria.AddOrder(new Order("OrderDate", false));
+                    orders = criteria.List<MPClients.DataAccess.Domain.Orders>();
+                }
                 uxGrid.DataSource = orders;
-                uxGrid.DataBind();
+                if (rebind)
+                {
+                    uxGrid.DataBind();
+                }
             }
             catch (Exception ex)
             {

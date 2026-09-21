@@ -15,7 +15,7 @@
     <property name="Territory" column="Territory" type="System.String" not-null="false" length="2" update="0" insert="0"/>
 
   </class>
-  <class name="ClientHoldDate" table="ClientHoldDate" >
+  <class name="ClientHoldDate" table="ClientHoldDate" lazy="false" >
     <id name="ID" type="System.String" column="Client_ID">
       <generator class="assigned"/>
     </id>

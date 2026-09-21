@@ -37,9 +37,13 @@ namespace MPClients
 
         private void LoadCategories()
         {
-            ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(Category));
-            criteria.AddOrder(new NHibernate.Expression.Order("ID", true));
-            IList<Category> categories = criteria.List<Category>();
+            IList<Category> categories;
+            using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+            {
+                ICriteria criteria = isolatedSession.CreateCriteria(typeof(Category));
+                criteria.AddOrder(new NHibernate.Expression.Order("ID", true));
+                categories = criteria.List<Category>();
+            }
 
             foreach (Category category in categories)
             {
@@ -253,7 +257,18 @@ namespace MPClients
             uxLockedOut.Checked = SecurityMembershipUser.IsLockedOut;
 
             MembershipUsers membershipUser;
-            membershipUser = UnitOfWork.GetIsolatedSession().Get<MembershipUsers>(new Guid(user));
+            Client client = null;
+            ClientHoldDate clientHoldDate = null;
+            using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+            {
+                membershipUser = isolatedSession.Get<MembershipUsers>(new Guid(user));
+
+                if (membershipUser != null)
+                {
+                    client = isolatedSession.Load<Client>(membershipUser.ClientID);
+                    clientHoldDate = isolatedSession.Load<ClientHoldDate>(membershipUser.ClientID);
+                }
+            }
 
             if (membershipUser != null)
             {
@@ -280,7 +295,6 @@ namespace MPClients
                     }
                 }
 
-                Client client = UnitOfWork.GetIsolatedSession().Load<Client>(membershipUser.ClientID);
                 try
                 {
                     //Shit de nhibernate no devuelve nulo si  no esta...devuelve cualquier cosa
@@ -291,7 +305,6 @@ namespace MPClients
 
                 }
 
-                ClientHoldDate clientHoldDate = UnitOfWork.GetIsolatedSession().Load<ClientHoldDate>(membershipUser.ClientID);
                 try
                 {
                     uxHoldFromDate.SelectedDate = clientHoldDate != null && clientHoldDate.HoldFromDate.HasValue ? clientHoldDate.HoldFromDate : new Nullable<DateTime>();

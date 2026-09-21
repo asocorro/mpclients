@@ -44,10 +44,14 @@ namespace MPClients.Web
             {
                 ICriterion expression = Expression.Eq("Status", 2);
 
-                ICriteria criteria = UnitOfWork.GetIsolatedSession().
-                    CreateCriteria(typeof(MPClients.DataAccess.Domain.VWOrders)).Add(expression);
-                criteria.AddOrder(new Order("OrderDate", false));
-                IList<MPClients.DataAccess.Domain.VWOrders> orders = criteria.List<MPClients.DataAccess.Domain.VWOrders>();
+                IList<MPClients.DataAccess.Domain.VWOrders> orders;
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ICriteria criteria = isolatedSession.
+                        CreateCriteria(typeof(MPClients.DataAccess.Domain.VWOrders)).Add(expression);
+                    criteria.AddOrder(new Order("OrderDate", false));
+                    orders = criteria.List<MPClients.DataAccess.Domain.VWOrders>();
+                }
                 uxGrid.DataSource = orders;
                 uxGrid.DataBind();
             }

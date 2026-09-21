@@ -57,6 +57,8 @@ namespace MPClients.Web
             else
             {
                 ISession session = UnitOfWork.GetIsolatedSession();
+                try
+                {
                 ITransaction transaccion = session.BeginTransaction();
 
                 Orders orders;
@@ -96,22 +98,26 @@ namespace MPClients.Web
                 sendOrder.ID = orders.AutoNum;
 
                 ICriterion expression = Expression.Eq("OrderID", ShoppingCartId);
-                ICriteria criteria =
-                    UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression);
-                IList<MPClients.DataAccess.Domain.OrderDetail> ordersDetail
-                      = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
+                // Fetch only the fields needed to construct the DTO array and avoid creating proxies
+                IList<object[]> rows;
+                using (ISession _session = UnitOfWork.GetIsolatedSession())
+                {
+                    IQuery q = _session.CreateQuery("select od.ProductID, od.Quantity, od.NetPrice from OrderDetail od where od.OrderID = :orderId");
+                    q.SetParameter("orderId", ShoppingCartId);
+                    rows = q.List<object[]>();
+                }
 
-                sendOrder.OrderDetails = new MPClients.Web.OrderWS.OrderDetail[ordersDetail.Count];
+                sendOrder.OrderDetails = new MPClients.Web.OrderWS.OrderDetail[rows.Count];
 
                 int i = 0;
-                foreach (MPClients.DataAccess.Domain.OrderDetail orderDetail in ordersDetail)
+                foreach (var row in rows)
                 {
                     MPClients.Web.OrderWS.OrderDetail details = new MPClients.Web.OrderWS.OrderDetail();
-                    details.NetPrice = orderDetail.NetPrice;
-                    details.Quantity = orderDetail.Quantity;
-                    details.ProductID = orderDetail.ProductID;
+                    details.NetPrice = row[2] == null ? (decimal?)null : Convert.ToDecimal(row[2]);
+                    details.Quantity = Convert.ToInt32(row[1]);
+                    details.ProductID = (string)row[0];
                     details.OrderID = orders.AutoNum;
-                  
+
                     sendOrder.OrderDetails[i] = details;
                     i += 1;
                 }
@@ -162,6 +168,11 @@ namespace MPClients.Web
                 {
                     Response.Redirect(MPClients.PageMethods.OrderConfirmation.DoLoad(uxID.Value));
                 }
+                }
+                finally
+                {
+                    try { session.Close(); } catch { }
+                }
             }
         }
 
@@ -189,21 +200,29 @@ namespace MPClients.Web
 
         private void BindGrid()
         {
-            ISession session = UnitOfWork.GetIsolatedSession();
-            ICriterion expression = Expression.Eq("OrderID", new Guid(uxID.Value));
-            ICriteria criteria =
-                session.CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression);
-            criteria.AddOrder(new Order("ProductID", true));
-            IList<MPClients.DataAccess.Domain.OrderDetail> orderDetails
-                = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
-
-            int intNumberOfProducts = 0;
-            foreach (var item in orderDetails)
+            IList<object[]> rows;
+            using (ISession session = UnitOfWork.GetIsolatedSession())
             {
-                if (!item.IsFriend)
-                {
+                ICriterion expression = Expression.Eq("OrderID", new Guid(uxID.Value));
+                // Select only required fields to avoid NHibernate creating proxies for OrderDetail
+                IQuery q = session.CreateQuery("select od.ProductID, od.Quantity, od.NetPrice, od.IsFriend, od.ProductName from OrderDetail od where od.OrderID = :orderId order by od.ProductID");
+                q.SetParameter("orderId", new Guid(uxID.Value));
+                rows = q.List<object[]>();
+            }
+
+            var orderDetails = new List<MPClients.DataAccess.Domain.OrderDetail>();
+            int intNumberOfProducts = 0;
+            foreach (var r in rows)
+            {
+                var od = new MPClients.DataAccess.Domain.OrderDetail();
+                od.ProductID = r[0] == null ? null : (string)r[0];
+                od.Quantity = r[1] == null ? 0 : Convert.ToInt32(r[1]);
+                od.NetPrice = r[2] == null ? (decimal?)null : Convert.ToDecimal(r[2]);
+                od.IsFriend = r[3] == null ? false : Convert.ToBoolean(r[3]);
+                od.ProductName = r[4] == null ? null : (string)r[4];
+                orderDetails.Add(od);
+                if (!od.IsFriend)
                     intNumberOfProducts += 1;
-                }
             }
 
             uxNumberOfProducts.Text = intNumberOfProducts.ToString();
@@ -255,6 +274,8 @@ namespace MPClients.Web
             uxID.Value = id;
             //create the order
             ISession session = UnitOfWork.GetIsolatedSession();
+            try
+            {
             Orders orders;
             orders = session.Get<Orders>(new Guid(id));
 
@@ -277,7 +298,7 @@ namespace MPClients.Web
                 }
 
                 MembershipUsers membershipUser;
-                membershipUser = UnitOfWork.GetIsolatedSession().Get<MembershipUsers>(new Guid(UserAccount.ProviderUserKey.ToString()));
+                membershipUser = session.Get<MembershipUsers>(new Guid(UserAccount.ProviderUserKey.ToString()));
 
                 bool AllowDelivery = false;
                 bool AllowPickup = false;
@@ -321,6 +342,11 @@ namespace MPClients.Web
                 uxPrintLink.Visible = false; // orders.Status == 1;
             }
 
+            }
+            finally
+            {
+                try { session.Close(); } catch { }
+            }
         }
 
     }

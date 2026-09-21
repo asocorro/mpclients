@@ -36,9 +36,11 @@ namespace MPClients.Web
         [MetaSapiens.PageMethods.PageMethod(true)]
         public void DoLoad(string id)
         {
-            ISession session = UnitOfWork.GetIsolatedSession();
             Orders orders;
-            orders = session.Get<Orders>(new Guid(id));
+            using (ISession session = UnitOfWork.GetIsolatedSession())
+            {
+                orders = session.Get<Orders>(new Guid(id));
+            }
             uxOrderId.Value = id;
             if (orders != null)
             {

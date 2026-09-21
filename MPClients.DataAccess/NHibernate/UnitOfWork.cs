@@ -363,9 +363,8 @@ namespace MPClients.DataAccess.NHibernate
 
         public static ISession GetIsolatedSession()
         {
-            string configFile = HttpContext.Current.Request.MapPath(ConfigurationSettings.AppSettings["nhibernate.config"]);
-            ISessionFactory  factory = new Configuration().Configure(configFile).BuildSessionFactory();
-            return factory.OpenSession();
+            if (!initialized) Initialize();
+            return UnitOfWork.sessionFactory.OpenSession();
         }
 
     }

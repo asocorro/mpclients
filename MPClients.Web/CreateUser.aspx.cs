@@ -37,6 +37,13 @@ namespace MPClients
 
         void uxCreateUser_Click(object sender, EventArgs e)
         {
+            // Server-side validation guard: ensure validators passed even if client scripts are disabled
+            if (!Page.IsValid)
+            {
+                MasterPage.DisplayMessage("Please fix validation errors.");
+                return;
+            }
+
             try
             {
                 MembershipCreateStatus status;

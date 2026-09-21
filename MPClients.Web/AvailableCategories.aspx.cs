@@ -32,9 +32,13 @@ namespace MPClients
 
         private void LoadAllCategories()
         {
-            ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(Category));
-            criteria.AddOrder(new NHibernate.Expression.Order("ID", true));
-            IList<Category> categories = criteria.List<Category>();
+            IList<Category> categories;
+            using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+            {
+                ICriteria criteria = isolatedSession.CreateCriteria(typeof(Category));
+                criteria.AddOrder(new NHibernate.Expression.Order("ID", true));
+                categories = criteria.List<Category>();
+            }
 
             foreach (Category category in categories)
             {

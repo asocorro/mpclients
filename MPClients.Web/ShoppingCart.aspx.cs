@@ -45,15 +45,28 @@ namespace MPClients
 
         void uxUpdateShopping_Click(object sender, EventArgs e)
         {
-            ISession session = UnitOfWork.GetIsolatedSession();
+            using (ISession session = UnitOfWork.GetIsolatedSession())
+            {
             MPClients.DataAccess.Domain.Orders order =
                 session.Get<MPClients.DataAccess.Domain.Orders>(ShoppingCartId);
             ITransaction tran = session.BeginTransaction();
 
             ICriterion expression = Expression.Eq("OrderID", ShoppingCartId);
-            ICriteria criteria = session.CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression);
-            IList<MPClients.DataAccess.Domain.OrderDetail> orders
-                  = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
+            // Fetch only the fields we need to avoid NHibernate creating proxies for OrderDetail
+            ISession _session = session;
+            IQuery q = _session.CreateQuery("select od.ID, od.ProductID, od.Quantity, od.NetPrice from OrderDetail od where od.OrderID = :orderId");
+            q.SetParameter("orderId", ShoppingCartId);
+            IList<object[]> rows = q.List<object[]>();
+            // Materialize lightweight DTO list to update quantities
+            var orders = new List<MPClients.DataAccess.Domain.OrderDetail>();
+            foreach (var r in rows)
+            {
+                var od = new MPClients.DataAccess.Domain.OrderDetail((Guid)r[0]);
+                od.ProductID = (string)r[1];
+                od.Quantity = Convert.ToInt32(r[2]);
+                od.NetPrice = r[3] == null ? (decimal?)null : Convert.ToDecimal(r[3]);
+                orders.Add(od);
+            }
 
             foreach (object item in this.uxGrid.Items)
             {
@@ -67,15 +80,17 @@ namespace MPClients
                         if (dataOrder.ProductID == productID)
                         {
                             dataOrder.Quantity = value;
+                            session.Update(dataOrder);
                             //dataOrder.ExtendedPrice = value * dataOrder.NetPrice;
                         }
                     }
-                
+
                 }
             }
 
             tran.Commit();
-            BindGrid(false);
+            }
+            BindGrid(true);
         }
 
         void uxResetShopping_Click(object sender, EventArgs e)
@@ -88,7 +103,7 @@ namespace MPClients
             conn.Close();
             MembershipUser currentUser = Membership.GetUser();
             MPClients.PageControllers.BasePage.CleanCurrentShopping(currentUser.ProviderUserKey.ToString());
-            BindGrid(false);
+            BindGrid(true);
         }
 
         void uxAddProducts_Click(object sender, EventArgs e)
@@ -135,6 +150,7 @@ namespace MPClients
                 string id = e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["ID"].ToString();
                 ISession session = UnitOfWork.Session;
                 ITransaction transaction = session.BeginTransaction();
+                // Use Load to get a reference for deletion without requiring an eager existence check
                 MPClients.DataAccess.Domain.OrderDetail entity =
                     UnitOfWork.Session.Load<MPClients.DataAccess.Domain.OrderDetail>(new Guid(id));
                 session.Delete(entity);
@@ -154,12 +170,24 @@ namespace MPClients
             try
             {
                 ICriterion expression = Expression.Eq("OrderID", ShoppingCartId);
-                ICriteria criteria =
-                    UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MPClients.DataAccess.Domain.OrderDetail)).Add(expression);
-                criteria.AddOrder(new Order("ProductName", true));
-                criteria.AddOrder(new Order("ProductID", true));
-                IList<MPClients.DataAccess.Domain.OrderDetail> userShoppingCart
-                    = criteria.List<MPClients.DataAccess.Domain.OrderDetail>();
+                // Avoid creating NHibernate proxies for OrderDetail by selecting required fields
+                IList<object[]> rows;
+                using (ISession _session = UnitOfWork.GetIsolatedSession())
+                {
+                    IQuery q = _session.CreateQuery("select od.ID, od.ProductID, od.Quantity, od.NetPrice, od.ProductName from OrderDetail od where od.OrderID = :orderId order by od.ProductName, od.ProductID");
+                    q.SetParameter("orderId", ShoppingCartId);
+                    rows = q.List<object[]>();
+                }
+                var userShoppingCart = new List<MPClients.DataAccess.Domain.OrderDetail>();
+                foreach (var r in rows)
+                {
+                    var od = new MPClients.DataAccess.Domain.OrderDetail((Guid)r[0]);
+                    od.ProductID = (string)r[1];
+                    od.Quantity = Convert.ToInt32(r[2]);
+                    od.NetPrice = r[3] == null ? (decimal?)null : Convert.ToDecimal(r[3]);
+                    od.ProductName = (string)r[4];
+                    userShoppingCart.Add(od);
+                }
                 if (userShoppingCart.Count == 0)
                 {
                     lblMessage.Visible = true;
@@ -167,7 +195,10 @@ namespace MPClients
                     uxCreateOrder.Enabled = false;
                 }
                 uxGrid.DataSource = userShoppingCart;
-                uxGrid.DataBind();
+                if (rebind)
+                {
+                    uxGrid.DataBind();
+                }
 
 
             }

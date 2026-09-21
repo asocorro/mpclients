@@ -104,9 +104,13 @@ namespace MPClients.Web
                         Expression.Or(
                         Expression.Like("ID", e.Text, MatchMode.Start)
                         , Expression.Like("Name", e.Text, MatchMode.Start));
-                    ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MPClients.DataAccess.Domain.Client)).Add(expression);
-                    criteria.AddOrder(new Order("Name", true));
-                    IList<MPClients.DataAccess.Domain.Client> allClients = criteria.List<MPClients.DataAccess.Domain.Client>();
+                    IList<MPClients.DataAccess.Domain.Client> allClients;
+                    using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                    {
+                        ICriteria criteria = isolatedSession.CreateCriteria(typeof(MPClients.DataAccess.Domain.Client)).Add(expression);
+                        criteria.AddOrder(new Order("Name", true));
+                        allClients = criteria.List<MPClients.DataAccess.Domain.Client>();
+                    }
 
                     int itemsPerRequest = 10;
                     int itemOffset = e.NumberOfItems;

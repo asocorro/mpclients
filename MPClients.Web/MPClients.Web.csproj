@@ -497,6 +497,7 @@
     <Content Include="User.aspx" />
     <Content Include="Users.aspx" />
     <Content Include="data.csv" />
+    <Content Include="ProductsSearch.aspx.cs.bak" />
     <None Include="Web References\OrderWS\OrderWS.disco" />
   </ItemGroup>
   <ItemGroup>

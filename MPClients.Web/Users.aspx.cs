@@ -131,9 +131,13 @@ namespace MPClients
                 {
                     expression = Expression.And(expression, Expression.Eq("IsLockedOut", true));
                 }
-                ICriteria criteria = UnitOfWork.GetIsolatedSession().CreateCriteria(typeof(MembershipUsers)).Add(expression);
-                criteria.AddOrder(new Order("UserName", true));
-                IList<MPClients.DataAccess.Domain.MembershipUsers> users = criteria.List<MembershipUsers>();
+                IList<MPClients.DataAccess.Domain.MembershipUsers> users;
+                using (ISession isolatedSession = UnitOfWork.GetIsolatedSession())
+                {
+                    ICriteria criteria = isolatedSession.CreateCriteria(typeof(MembershipUsers)).Add(expression);
+                    criteria.AddOrder(new Order("UserName", true));
+                    users = criteria.List<MembershipUsers>();
+                }
 
                 uxGrid.DataSource = users;
                 uxGrid.Rebind();

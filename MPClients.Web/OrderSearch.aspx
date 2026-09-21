@@ -70,7 +70,7 @@
                             <td class="bodycopy" valign="top">
                                 <telerik:RadGrid ID="uxGrid" SkinID="Office2007" runat="server" AllowPaging="True"
                                     AllowSorting="True" PageSize="50" ShowFooter="True" AllowMultiRowSelection="False"
-                                    GridLines="Both" EnableAJAX="True" ShowStatusBar="True" Width="100%" GroupPanel-ToolTip="toooool tip"
+                                    GridLines="Both" EnableAJAX="True" ShowStatusBar="False" Width="100%" GroupPanel-ToolTip="toooool tip"
                                     ClientSettings-AllowDragToGroup="true" ShowGroupPanel="true" GroupingEnabled="true"
                                     GroupPanel-Enabled="true">
                                     <PagerStyle Mode="NumericPages" />

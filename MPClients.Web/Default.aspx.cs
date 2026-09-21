@@ -144,15 +144,16 @@ namespace MPClients
 
         private void BindDataGrid()
         {
-            ISession session = UnitOfWork.GetIsolatedSession();
-            //ICriterion expression = Expression.Ge("FromDate", new DateTime(2000, 1, 1));
-            ICriterion expression = Expression.And(Expression.Le("FromDate", DateTime.Now), Expression.Ge("ToDate", DateTime.Now));
+            using (ISession session = UnitOfWork.GetIsolatedSession())
+            {
+                ICriterion expression = Expression.And(Expression.Le("FromDate", DateTime.Now), Expression.Ge("ToDate", DateTime.Now));
 
-            ICriteria criteria = UnitOfWork.GetIsolatedSession().
-                    CreateCriteria(typeof(MPClients.DataAccess.Domain.News)).Add(expression);
-            criteria.AddOrder(new Order("FromDate", false));
-            uxGrid.DataSource = criteria.List<MPClients.DataAccess.Domain.News>();
-            uxGrid.DataBind();
+                ICriteria criteria = session.
+                        CreateCriteria(typeof(MPClients.DataAccess.Domain.News)).Add(expression);
+                criteria.AddOrder(new Order("FromDate", false));
+                uxGrid.DataSource = criteria.List<MPClients.DataAccess.Domain.News>();
+                uxGrid.DataBind();
+            }
         }
 
         private class PasswordExportResult
